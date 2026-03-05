@@ -1,4 +1,5 @@
 import React from 'react';
+import { EzberSVG, SiraliSVG, MeydanSVG, TestSVG } from '../components/PuzzleIcons';
 
 export default function HomePage() {
   return (
@@ -57,34 +58,50 @@ export default function HomePage() {
       {/* Merkezi Kart Alanı */}
       {/* top-[333px] ve translate-x ile tam ortalama sağlandı */}
       <div className="absolute top-83.25 left-1/2 -translate-x-1/2 w-89 h-93.5 bg-[#FAECA2] rounded-md shadow-md p-2 z-20">
-        
-        {/* Yapboz Butonları Konteyneri */}
-        <div className="w-full h-full relative flex flex-wrap">
-          
-          {/* NOT: Yapboz parçalarının tam birbirine geçmesi için Figma'dan her butonun tam SVG kodunu ('Copy as SVG') alman gerekecek. 
-              Şimdilik buton metinlerini ve renklerini hazırladım, div yerine SVG path'lerini buraya gömeceğiz. */}
-          
-          <PuzzleButton title="EZBER KARTLARI" position="top-left" />
-          <PuzzleButton title="SIRALI TEST" position="top-right" />
-          <PuzzleButton title="MEYDAN OKUMA" position="bottom-left" />
-          <PuzzleButton title="SEÇİMLİ TEST" position="bottom-right" />
+        <div className="w-full h-full flex flex-wrap">
+          <PuzzleButton
+            title="EZBER KARTLARI"
+            Icon={EzberSVG}
+            onClick={() => console.log("Ezber moduna git")}
+          />
 
+          <PuzzleButton
+            title="SIRALI TEST"
+            Icon={SiraliSVG}
+            onClick={() => console.log("Sıralı moduna git")}
+          />
+
+          <PuzzleButton
+            title="MEYDAN OKUMA"
+            Icon={MeydanSVG}
+            onClick={() => console.log("Meydan Okuma moduna git")}
+          />
+
+          <PuzzleButton
+            title="SEÇİMLİ TEST"
+            Icon={TestSVG}
+            onClick={() => console.log("Seçimli Test moduna git")}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-// Alt Bileşen: Yapboz Butonu (Şablon)
 // eslint-disable-next-line no-unused-vars
-function PuzzleButton({ title, position }) {
-  // Figma'dan SVG'leri aldığında bu bileşeni refactor edeceğiz.
-  // Şimdilik konsepti görmek için geçici bir grid kutusu yapıyoruz.
+function PuzzleButton({ title, Icon, onClick }) {
   return (
     <button 
-      className="w-1/2 h-1/2 bg-[#F8971F] border border-[#FAECA2] flex items-center justify-center p-4 hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+      onClick={onClick}
+      className="relative w-1/2 h-1/2 group cursor-pointer transition-transform duration-200 active:scale-95"
     >
-      <span className="font-poppins font-black text-[20px] text-[#F5E4C3] text-center leading-tight drop-shadow-sm">
+      {/* Arka Plandaki Yapboz Şekli */}
+      <div className="absolute inset-0 text-[#F8971F] group-hover:brightness-110 transition-all">
+        <Icon />
+      </div>
+
+      {/* Üstteki Metin Katmanı */}
+      <span className="relative z-10 flex items-center justify-center h-full px-4 font-poppins font-black text-[20px] text-[#F5E4C3] text-center leading-tight drop-shadow-sm select-none pointer-events-none">
         {title}
       </span>
     </button>
