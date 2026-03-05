@@ -40,11 +40,6 @@ export default function Layout({ children }) {
           {children}
         </div>
       </div>
-
-      {/* 3. Alt Bar: Tasarımın değil, telefonun en altına yapışması için dışarı aldık */}
-      {/* Eğer alt barın da ölçeklenmesini istersen içeride bırakabilirsin */}
-      <div className="fixed top-0 left-0 w-full h-8.5 bg-[#D9D9D9] z-50 border-t border-gray-300"></div>
-      <div className="fixed bottom-0 left-0 w-full h-8.5 bg-[#D9D9D9] z-50 border-t border-gray-300"></div>
     </div>
   );
 }

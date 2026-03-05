@@ -10,11 +10,10 @@ export default function HomePage() {
         <div 
         className="absolute z-0 pointer-events-none"
         style={{ 
-            // -1px ile hem yukarıdan hem soldan hafifçe dışarı taşırıyoruz
-            top: '-1px', 
-            left: '-1px', 
-            // Genişliği 100% + 2px yaparak sağdan da taşmasını sağlıyoruz
-            width: 'calc(100% + 2px)', 
+            top: '0', 
+            left: '50%', 
+            transform: 'translateX(-50%)',
+            width: '100vw', 
             height: '313px',
         }}
         >
