@@ -1,109 +1,155 @@
 import React from 'react';
 import { EzberSVG, SiraliSVG, MeydanSVG, TestSVG } from '../components/PuzzleIcons';
+import foxImage from '../assets/foxy.png';
 
 export default function HomePage() {
   return (
     <div className="w-full h-full relative">
       
-      {/* Header - Dalgalı Arka Plan (Wave SVG) */}
-      <div className="absolute top-0 left-0 w-full z-0">
-            <svg 
-                width="100%" 
-                viewBox="0 0 375 305" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="none"
-                className="block h-76.25 overflow-visible"
-                shapeRendering="geometricPrecision" 
-            >
-                <g>
-                    <path d="M0 0H375V194.394C375 254.398 307.909 289.17 249.375 275.971C194.258 263.541 149.326 273.269 100.876 291.42C51.9 309.77 0 276.193 0 223.892V0Z"
-                    fill="#9CB9B7"
-                    style={{ 
-                        filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.25))',
-                        willChange: 'filter',
-                        WebkitTransform: 'translateZ(0)',
-                    }}
-                    />
-                </g>
-                <defs>
-                  <filter id="filter0_d_18_113" x="-4" y="0" width="383" height="304.484" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                    <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                        <feOffset dy="4"/>
-                        <feGaussianBlur stdDeviation="2"/>
-                        <feComposite in2="hardAlpha" operator="out"/>
-                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_113"/>
-                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_113" result="shape"/>
-                    </filter>
-                </defs>
-            </svg>
+      {/* 1. Üst Dalgalı Arka Plan (Wave) */}
+      {/* 333px olan yüksekliği 20px azaltarak 313px olarak güncellendi */}
+      <div 
+        className="absolute top-0 left-0 w-full z-0 pointer-events-none"
+        style={{ height: '313px' }}
+      >
+          <svg 
+              width="375" height="313" viewBox="0 0 375 305" 
+              className="w-full h-full object-cover"
+              shapeRendering="geometricPrecision" preserveAspectRatio="none"
+          >
+              <path d="M0 0H375V194.394C375 254.398 307.909 289.17 249.375 275.971C194.258 263.541 149.326 273.269 100.876 291.42C51.9 309.77 0 276.193 0 223.892V0Z"
+              fill="#9CB9B7"
+              style={{ filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.25))' }}
+              />
+          </svg>
        </div>
 
-      {/* Üst Kısım İçeriği (Başlık ve Maskot) */}
-      <div className="relative z-10 pt-16 px-8 flex flex-col items-start">
-        {/* Başlık */}
-        <h1 className="font-outfit font-extrabold text-[36px] text-[#F5E4C3] tracking-wide drop-shadow-md">
-          AKIL KATI
-        </h1>
-        
-        {/* Tilki Maskotu Placeholder */}
-        <div className="mt-2 w-24 h-24 bg-orange-300 rounded-full border-4 border-white flex items-center justify-center text-xs text-orange-800 font-bold shadow-lg">
-          {/* TODO: src/assets/fox.png buraya eklenecek */}
-          Tilki PNG
-        </div>
+      {/* 2. Başlık */}
+      <h1 
+        className="absolute w-full font-outfit font-extrabold text-[36px] text-[#F5E4C3] text-center z-10"
+        style={{ top: '130px' }}
+      >
+        AKIL KATI
+      </h1>
+
+      {/* 3. Maskot Tilki */}
+      <div 
+        className="absolute z-20 pointer-events-auto"
+        style={{ width: '177px', height: '177px', top: '198px', left: '0px' }} 
+      >
+         <img src={foxImage} alt="Fox Mascot" className="w-full h-full object-contain drop-shadow-lg" />
       </div>
 
-      {/* Merkezi Kart Alanı */}
-      {/* top-[333px] ve translate-x ile tam ortalama sağlandı */}
-      <div className="absolute top-83.25 left-1/2 -translate-x-1/2 w-89 h-93.5 bg-[#FAECA2] rounded-md shadow-md p-2 z-20">
-        <div className="w-full h-full flex flex-wrap">
-          <PuzzleButton
-            title="EZBER KARTLARI"
+      {/* 4. Merkezi Sarı Kart (Buton Konteynırı) */}
+      <div 
+        className="absolute bg-[#FAECA2] shadow-md z-10"
+        style={{ width: '356px', height: '374px', top: '333px', left: '10px', borderRadius: '6px' }} 
+      >
+        <div className="relative w-full h-full">
+          
+            <PuzzleButton
+            title={<>EZBER<br/>KARTLARI</>} // Satır sonu için br kullanabilirsin
             Icon={EzberSVG}
-            onClick={() => console.log("Ezber moduna git")}
-          />
+            style={{ 
+                width: '199.5px', height: '173.9px', 
+                left: 'calc(20px - 10px - 4px)', // Senin manuel ayarın
+                top: '19px' 
+            }}
+            textStyle={{
+                width: '102px',   // Figma'daki Width
+                height: '60px',   // Figma'daki Height
+                left: '17.17px',  // Hesapladığımız Relative Left
+                top: '47px'       // Hesapladığımız Relative Top
+            }}
+            onClick={() => console.log("Ezber")}
+            />
 
-          <PuzzleButton
-            title="SIRALI TEST"
+            <PuzzleButton
+            title={<>SIRALI<br/>TEST</>} 
             Icon={SiraliSVG}
-            onClick={() => console.log("Sıralı moduna git")}
-          />
+            style={{ 
+                width: '183px', 
+                height: '214px', 
+                top: '19.22px', 
+                left: 'calc(183.31px - 10px - 4px)'
+            }}
+            textStyle={{
+                width: '65px',    // Figma Genişlik
+                height: '60px',   // Figma Yükseklik
+                left: '90.86px',  // Hesaplanan Bağıl Left
+                top: '51.78px'    // Hesaplanan Bağıl Top
+            }}
+            onClick={() => console.log("Sıralı")}
+            />
 
-          <PuzzleButton
-            title="MEYDAN OKUMA"
+            <PuzzleButton
+            title={<>MEYDAN<br/>OKUMA</>} 
             Icon={MeydanSVG}
-            onClick={() => console.log("Meydan Okuma moduna git")}
-          />
+            style={{ 
+                width: '216px', 
+                height: '201px', 
+                top: '157.9px', 
+                left: 'calc(20px - 10px - 4px)' // Senin manuel düzeltmen
+            }}
+            textStyle={{
+                width: '91px',    // Figma Genişlik
+                height: '60px',   // Figma Yükseklik
+                left: '31.17px',  // Hesaplanan Bağıl Left
+                top: '87.1px'     // Hesaplanan Bağıl Top
+            }}
+            onClick={() => console.log("Meydan")}
+            />
 
-          <PuzzleButton
-            title="SEÇİMLİ TEST"
+            <PuzzleButton
+            title={<>SEÇİMLİ<br/>TEST</>} 
             Icon={TestSVG}
-            onClick={() => console.log("Seçimli Test moduna git")}
-          />
+            style={{ 
+                width: '197px', 
+                height: '240px', 
+                top: '122.91px', 
+                left: 'calc(171.4px - 10px - 4px)'
+            }}
+            textStyle={{
+                width: '81px',     // Figma Genişlik
+                height: '60px',    // Figma Yükseklik
+                left: '83.77px',   // Hesaplanan Bağıl Left
+                top: '134.09px'    // Hesaplanan Bağıl Top
+            }}
+            onClick={() => console.log("Seçimli")}
+            />
         </div>
       </div>
     </div>
   );
 }
 
+// Buton Bileşeni (Gölge efekti CSS ile veriliyor)
 // eslint-disable-next-line no-unused-vars
-function PuzzleButton({ title, Icon, onClick }) {
+function PuzzleButton({ title, Icon, onClick, style, textStyle }) {
   return (
-    <button 
-      onClick={onClick}
-      className="relative w-1/2 h-1/2 group cursor-pointer transition-transform duration-200 active:scale-95"
+    // Kapsayıcı kutu: pointer-events-none (Tıklamalar dikdörtgenin içinden geçer)
+    <div 
+      style={style} 
+      className="absolute pointer-events-none flex items-start justify-start"
     >
-      {/* Arka Plandaki Yapboz Şekli */}
-      <div className="absolute inset-0 text-[#F8971F] group-hover:brightness-110 transition-all">
-        <Icon />
+      <div className="w-full h-full relative">
+        <div className="w-full h-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+          <Icon 
+            onClick={onClick} 
+            // Burada artık pointer-events-auto YOK, sadece animasyon var
+            className="w-full h-full transition-transform duration-200 active:scale-95" 
+          />
+        </div>
+        
+        <div 
+          style={textStyle}
+          className="absolute flex items-center justify-center pointer-events-none"
+        >
+          <span className="font-poppins font-black text-[20px] text-[#F5E4C3] text-center leading-[100%] uppercase select-none">
+            {title}
+          </span>
+        </div>
       </div>
-
-      {/* Üstteki Metin Katmanı */}
-      <span className="relative z-10 flex items-center justify-center h-full px-4 font-poppins font-black text-[20px] text-[#F5E4C3] text-center leading-tight drop-shadow-sm select-none pointer-events-none">
-        {title}
-      </span>
-    </button>
+    </div>
   );
 }
