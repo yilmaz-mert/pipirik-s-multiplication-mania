@@ -6,24 +6,32 @@ export default function HomePage() {
   return (
     <div className="w-full h-full relative">
       
-      {/* 1. Üst Dalgalı Arka Plan (Wave) */}
-      {/* 333px olan yüksekliği 20px azaltarak 313px olarak güncellendi */}
-      <div 
-        className="absolute top-0 left-0 w-full z-0 pointer-events-none"
-        style={{ height: '313px' }}
-      >
-          <svg 
-              width="375" height="313" viewBox="0 0 375 305" 
-              className="w-full h-full object-cover"
-              shapeRendering="geometricPrecision" preserveAspectRatio="none"
-          >
-              <path d="M0 0H375V194.394C375 254.398 307.909 289.17 249.375 275.971C194.258 263.541 149.326 273.269 100.876 291.42C51.9 309.77 0 276.193 0 223.892V0Z"
-              fill="#9CB9B7"
-              style={{ filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.25))' }}
-              />
-          </svg>
-       </div>
-
+        {/* 1. Üst Dalgalı Arka Plan (Wave) */}
+        <div 
+        className="absolute z-0 pointer-events-none"
+        style={{ 
+            // -1px ile hem yukarıdan hem soldan hafifçe dışarı taşırıyoruz
+            top: '-1px', 
+            left: '-1px', 
+            // Genişliği 100% + 2px yaparak sağdan da taşmasını sağlıyoruz
+            width: 'calc(100% + 2px)', 
+            height: '313px',
+        }}
+        >
+            <svg 
+                viewBox="0 0 375 305" 
+                className="w-full h-full block" // block ekleyerek inline boşlukları sildik
+                shapeRendering="geometricPrecision" 
+                preserveAspectRatio="none" 
+            >
+                <path 
+                    // Path'in başlangıcını 0 yerine -1 yaparak SVG içinde de boşluk kalmamasını garantiye alabiliriz
+                    d="M-1 -1H376V194.394C375 254.398 307.909 289.17 249.375 275.971C194.258 263.541 149.326 273.269 100.876 291.42C51.9 309.77 -1 276.193 -1 223.892V-1Z"
+                    fill="#9CB9B7"
+                    style={{ filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.25))' }}
+                />
+            </svg>
+        </div>
       {/* 2. Başlık */}
       <h1 
         className="absolute w-full font-outfit font-extrabold text-[36px] text-[#F5E4C3] text-center z-10"
@@ -43,7 +51,7 @@ export default function HomePage() {
       {/* 4. Merkezi Sarı Kart (Buton Konteynırı) */}
       <div 
         className="absolute bg-[#FAECA2] shadow-md z-10"
-        style={{ width: '356px', height: '374px', top: '333px', left: '10px', borderRadius: '6px' }} 
+        style={{ width: '356px', height: '374px', top: '333px', left: 'calc(50% - 178px)', borderRadius: '6px' }} 
       >
         <div className="relative w-full h-full">
           
