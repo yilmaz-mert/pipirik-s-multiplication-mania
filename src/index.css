@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Poppins:wght@900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-outfit: "Outfit", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #1f2937; /* Masaüstü için dış koyu arka plan */
+  margin: 0;
+  font-family: var(--font-poppins); /* Genel font */
+}
+
+/* Kareli Defter Deseni */
+.bg-grid-paper {
+  background-color: #ffffff;
+  background-image: 
+    linear-gradient(#e5e7eb 1px, transparent 1px),
+    linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+  background-size: 20px 20px; /* Karelerin boyutu, isteğe göre küçültüp büyütebilirsin */
+  background-position: center top;
+}
