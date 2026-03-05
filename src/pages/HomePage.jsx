@@ -152,7 +152,7 @@ function PuzzleButton({ title, Icon, onClick, style, textStyle }) {
           style={textStyle}
           className="absolute flex items-center justify-center pointer-events-none"
         >
-          <span className="font-poppins font-black text-[20px] text-[#F5E4C3] text-center leading-[100%] uppercase select-none">
+          <span className="font-poppins font-black text-[20px] text-[#F5E4C3] text-center leading-7.5 uppercase select-none">
             {title}
           </span>
         </div>
