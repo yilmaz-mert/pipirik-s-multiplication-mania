@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import WaveHeader from '../components/WaveHeader';
 import { Delete, Check } from 'lucide-react';
+import useSound from 'use-sound';
 
 export default function SelectiveGamePage() {
   const location = useLocation();
@@ -12,6 +13,10 @@ export default function SelectiveGamePage() {
   const [userInput, setUserInput] = useState('');
   const [status, setStatus] = useState('idle'); // 'idle', 'correct', 'wrong'
   const [results, setResults] = useState({ correct: 0, wrong: 0 });
+
+  const [playClick] = useSound('/sounds/click.ogg', { volume: 0.5 });
+  const [playCorrect] = useSound('/sounds/correct.ogg');
+  const [playWrong] = useSound('/sounds/wrong.ogg');
 
   // Animasyon CSS'leri
   const gameAnimations = `
@@ -61,6 +66,7 @@ export default function SelectiveGamePage() {
 
   const handleNumpad = (value) => {
     if (status !== 'idle') return; 
+    playClick();
     if (userInput.length < 3) {
       setUserInput(prev => prev + value);
     }
@@ -68,6 +74,7 @@ export default function SelectiveGamePage() {
 
   const handleDelete = () => {
     if (status !== 'idle') return;
+    playClick();
     setUserInput(prev => prev.slice(0, -1));
   };
 
@@ -78,9 +85,11 @@ export default function SelectiveGamePage() {
     const isCorrect = parsedInput === currentQuestion.answer;
 
     if (isCorrect) {
+      playCorrect();
       setStatus('correct');
       setResults(prev => ({ ...prev, correct: prev.correct + 1 }));
     } else {
+      playWrong();
       setStatus('wrong');
       setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
     }
