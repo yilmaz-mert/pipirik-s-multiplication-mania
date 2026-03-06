@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
+import SelectiveTestPage from './pages/SelectiveTestPage';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
           <Route path="/ezber" element={<div className="text-white text-center mt-20">Ezber Kartları Sayfası</div>} />
           <Route path="/sirali" element={<div className="text-white text-center mt-20">Sıralı Test Sayfası</div>} />
           <Route path="/meydan" element={<div className="text-white text-center mt-20">Meydan Okuma Sayfası</div>} />
-          <Route path="/secimli" element={<div className="text-white text-center mt-20">Seçimli Test Sayfası</div>} />
+          <Route path="/secimli" element={<SelectiveTestPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -5,6 +5,12 @@
 @theme {
   --font-outfit: "Outfit", sans-serif;
   --font-poppins: "Poppins", sans-serif;
+
+  --color-tema-kutu: #F8971F;
+  --color-tema-enak: #F5E4C3;
+  --color-tema-secili: #F9C261;
+  --color-tema-buton2: #5F9CB8;
+  --color-tema-vector: #FAECA2;
 }
 
 body {

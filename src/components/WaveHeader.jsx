@@ -1,6 +1,10 @@
 ﻿import React from 'react';
+import { Home, ChevronLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export default function WaveHeader({ title, waveHeight = '313px' }) {
+export default function WaveHeader({ title, waveHeight = '313px', titleTop = '130px', showIcons = true }) {
+  const navigate = useNavigate();
+
   return (
     <>
       <div 
@@ -36,12 +40,32 @@ export default function WaveHeader({ title, waveHeight = '313px' }) {
           />
         </svg>
       </div>
+
+      {/* İkonlar (Geri ve Home) - Sadece showIcons true ise renderla */}
+      {showIcons && (
+        <div className="absolute top-8 w-full px-7.5 flex justify-between items-center z-50 pointer-events-none">
+          <button 
+            type="button"
+            onClick={() => navigate(-1)} 
+            className="text-[#1D324F] hover:opacity-80 pointer-events-auto p-2"
+          >
+            <ChevronLeft size={28} strokeWidth={3} />
+          </button>
+          <button 
+            type="button"
+            onClick={() => navigate('/')} 
+            className="text-[#1D324F] hover:opacity-80 pointer-events-auto p-2"
+          >
+            <Home size={28} strokeWidth={3} />
+          </button>
+        </div>
+      )}
       
       {/* Başlık */}
       {title && (
         <h1 
-          className="absolute w-full font-outfit font-extrabold text-[36px] text-[#F5E4C3] text-center z-10"
-          style={{ top: '130px' }}
+          className="absolute w-full font-outfit font-extrabold text-[36px] text-tema-enak text-center z-10"
+          style={{ top: titleTop }}
         >
           {title}
         </h1>

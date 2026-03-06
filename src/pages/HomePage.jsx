@@ -12,7 +12,7 @@ export default function HomePage() {
     <div className="w-full h-full relative">
       
       {/* 1. Üst Dalgalı Arka Plan (Wave) ve Başlık */}
-      <WaveHeader title="AKIL KATI" />
+      <WaveHeader title="AKIL KATI" showIcons={false} />
 
       {/* 3. Maskot Tilki */}
       <div 
@@ -24,7 +24,7 @@ export default function HomePage() {
 
       {/* 4. Merkezi Sarı Kart (Buton Konteynırı) */}
       <div 
-        className="absolute bg-[#FAECA2] shadow-md z-10"
+        className="absolute bg-tema-vector shadow-md z-10"
         style={{ width: '356px', height: '374px', top: '333px', left: 'calc(50% - 178px)', borderRadius: '6px' }} 
       >
         <div className="relative w-full h-full">
