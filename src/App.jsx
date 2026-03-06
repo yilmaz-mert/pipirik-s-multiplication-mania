@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import SelectiveTestPage from './pages/SelectiveTestPage';
+import SelectiveGamePage from './pages/SelectiveGamePage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/sirali" element={<div className="text-white text-center mt-20">Sıralı Test Sayfası</div>} />
           <Route path="/meydan" element={<div className="text-white text-center mt-20">Meydan Okuma Sayfası</div>} />
           <Route path="/secimli" element={<SelectiveTestPage />} />
+          <Route path="/oyun" element={<SelectiveGamePage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

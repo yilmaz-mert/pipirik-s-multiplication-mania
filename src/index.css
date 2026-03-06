@@ -11,6 +11,9 @@
   --color-tema-secili: #F9C261;
   --color-tema-buton2: #5F9CB8;
   --color-tema-vector: #FAECA2;
+  --color-tema-yazi: #130D3D;
+  --color-wrong: #E53935;
+  --color-correct: #43A047;
 }
 
 body {
