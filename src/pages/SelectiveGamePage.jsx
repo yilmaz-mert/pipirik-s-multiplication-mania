@@ -78,8 +78,9 @@ export default function SelectiveGamePage() {
         setStatus('idle');
       } else {
         // Oyun Bitti
-        alert(`Oyun Bitti! Doğru: ${isCorrect ? results.correct + 1 : results.correct}, Yanlış: ${!isCorrect ? results.wrong + 1 : results.wrong}`);
-        navigate('/'); // Şimdilik ana sayfaya dön
+        const finalCorrect = isCorrect ? results.correct + 1 : results.correct;
+        const finalWrong = !isCorrect ? results.wrong + 1 : results.wrong;
+        navigate('/secimli-sonuc', { state: { correct: finalCorrect, wrong: finalWrong } });
       }
     }, 1000);
   };

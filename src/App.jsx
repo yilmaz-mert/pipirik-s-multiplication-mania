@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import SelectiveTestPage from './pages/SelectiveTestPage';
 import SelectiveGamePage from './pages/SelectiveGamePage';
+import SelectiveGameResultPage from './pages/SelectiveGameResultPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/meydan" element={<div className="text-white text-center mt-20">Meydan Okuma Sayfası</div>} />
           <Route path="/secimli" element={<SelectiveTestPage />} />
           <Route path="/oyun" element={<SelectiveGamePage />} />
+          <Route path="/secimli-sonuc" element={<SelectiveGameResultPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>
