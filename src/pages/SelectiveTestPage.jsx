@@ -84,7 +84,7 @@ export default function SelectiveTestPage() {
             animation: 'smoothFadeIn 0.4s ease-out forwards'
           }}
         >
-          <span className="font-poppins font-semibold text-[17px] text-[#1D324F] text-center leading-tight">
+          <span className="font-poppins font-semibold text-[17px] text-tema-yazi text-center leading-tight">
             Hangi sayıların çarpımını istiyorsun?
           </span>
         </div>
@@ -109,7 +109,7 @@ export default function SelectiveTestPage() {
               <button
                 key={item.id}
                 onClick={() => toggleSelection(item.id)}
-                className="w-full flex-1 flex items-center justify-center font-outfit font-bold text-[18px] text-[#1D324F] transition-colors"
+                className="w-full flex-1 flex items-center justify-center font-outfit font-bold text-[18px] text-tema-yazi transition-colors"
                 style={{
                   backgroundColor: isSelected ? 'var(--color-tema-secili)' : 'var(--color-tema-enak)',
                   borderTopLeftRadius: isFirst ? '6px' : '0px',
