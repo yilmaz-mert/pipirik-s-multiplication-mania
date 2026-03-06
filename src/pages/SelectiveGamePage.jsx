@@ -158,7 +158,7 @@ export default function SelectiveGamePage() {
         </div>
 
         {/* Numpad */}
-        <div className="w-76 grid grid-cols-3 gap-5 mx-auto mt-2">
+        <div className="w-76 grid grid-cols-3 gap-5 place-items-center mt-2">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
              <button
                 key={num}
