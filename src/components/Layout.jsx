@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function Layout({ children }) {
   const [scale, setScale] = useState(1);
+  const [viewport, setViewport] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
     const handleResize = () => {
@@ -14,6 +15,7 @@ export default function Layout({ children }) {
       
       // Tasarımı bozmadan sığdır
       setScale(Math.min(scaleX, scaleY));
+      setViewport({ w: width, h: height });
     };
 
     handleResize();
@@ -23,7 +25,15 @@ export default function Layout({ children }) {
 
   return (
     // 1. Arka Planı Buraya Taşıdık: Artık boşluklar "siyah" değil "grid" görünecek
-    <div className="fixed inset-0 w-full h-full flex justify-center items-center bg-white bg-grid-paper overflow-hidden select-none touch-none">
+    // Scale ve Viewport değerlerini CSS değişkeni olarak içeriye aktarıyoruz
+    <div 
+      className="fixed inset-0 w-full h-full flex justify-center bg-white bg-grid-paper overflow-hidden select-none touch-none"
+      style={{ 
+        '--app-scale': scale,
+        '--vp-w': `${viewport.w}px`,
+        '--vp-h': `${viewport.h}px`
+      }}
+    >
       
       {/* 2. Ölçeklenen Tasarım Alanı */}
       <div 
@@ -32,7 +42,7 @@ export default function Layout({ children }) {
           width: '393px', 
           height: '852px',
           transform: `scale(${scale})`,
-          transformOrigin: 'center center',
+          transformOrigin: 'top center', // <-- KRİTİK: Hep üstten başlasın, üstte boşluk olmasın
         }}
       >
         {/* Sayfa İçeriği */}
