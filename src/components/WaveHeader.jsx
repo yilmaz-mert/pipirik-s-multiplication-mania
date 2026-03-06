@@ -64,7 +64,7 @@ export default function WaveHeader({ title, waveHeight = '313px', titleTop = '13
       {/* Başlık */}
       {title && (
         <h1 
-          className="absolute w-full font-outfit font-extrabold text-[36px] text-tema-enak text-center z-10"
+          className="absolute w-full font-outfit font-extrabold text-[36px] text-tema-enak text-center z-10 leading-tight"
           style={{ top: titleTop }}
         >
           {title}

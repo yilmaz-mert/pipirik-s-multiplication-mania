@@ -110,25 +110,25 @@ export default function SelectiveGamePage() {
       <div className="relative z-20 flex flex-col items-center w-full max-w-93.75 mx-auto pt-40 pb-5">
         
         {/* Progress Bar ve Sayı Göstergesi */}
-        <div className="w-full flex-col px-4 mb-4">
+        <div className="w-full flex-col px-4 mb-12 -mt-2">
           <div className="flex justify-end w-83.75 mx-auto">
             <div 
-              className="flex justify-center items-center rounded bg-tema-enak px-2 py-0.5 mb-1 text-tema-yazi font-poppins font-extrabold text-[15px] tracking-wide"
+              className="flex justify-center items-center mb-1 text-tema-enak font-poppins font-extrabold text-[15px] leading-none tracking-[0.04em]"
             >
-              {currentIndex + 1}/{questions.length}
+              {currentIndex + 1} / {questions.length}
             </div>
           </div>
           
           <div 
             className="w-83.75 h-0 mx-auto relative rounded-full" 
-            style={{ border: '10px solid var(--color-tema-enak)' }}
+            style={{ border: '5px solid var(--color-tema-enak)' }}
           >
             {/* İlerleyen alan */}
             <div 
-              className="absolute -left-2.5 -top-2.5 h-0 rounded-full transition-all duration-300"
+              className="absolute -left-1.25 -top-1.25 h-0 rounded-full transition-all duration-300"
               style={{
-                 border: '10px solid var(--color-tema-kutu)',
-                 width: `calc(${progressPercentage}% + 10px)` // Barın içi dolsun
+                 border: '5px solid var(--color-tema-kutu)',
+                 width: `calc(${progressPercentage}% + 5px)` // Barın içi dolsun
               }}
             ></div>
           </div>
