@@ -21,7 +21,7 @@ export default function PuzzleButton({ title, Icon, onClick, style, textStyle, a
           className="absolute flex items-center justify-center pointer-events-none"
           aria-hidden="true"
         >
-          <span className="font-poppins font-black text-[20px] text-tema-enak text-center leading-7.5 uppercase select-none">
+          <span className="font-poppins font-black text-[min(5.33vw,27.3px)] text-tema-enak text-center leading-7.5 uppercase select-none">
             {title}
           </span>
         </div>

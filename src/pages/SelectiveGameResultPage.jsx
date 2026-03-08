@@ -6,10 +6,8 @@ export default function SelectiveGameResultPage() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Eğer state ile gelinmediyse 0 kabul edelim
   const { correct = 0, wrong = 0 } = location.state || {};
 
-  // CSS Animasyonlarını buraya ekliyoruz
   const customAnimations = `
     @keyframes revealLine {
       0% { clip-path: polygon(0 0, 0 0, 0 0); opacity: 0; }
@@ -36,167 +34,83 @@ export default function SelectiveGameResultPage() {
   `;
 
   return (
-    <div className="relative w-full h-full min-h-screen overflow-visible flex flex-col items-center select-none">
-      {/* Özel animasyon stillerini sayfaya basıyoruz */}
+    <div className="w-full h-full relative flex flex-col items-center overflow-x-hidden overflow-y-auto pb-10">
       <style>{customAnimations}</style>
 
-      {/* Background SVG katmanı */}
-      <div className="absolute pointer-events-none z-10" style={{ top: '309px', left: '-24px' }}>
-        <svg width="441" height="456" viewBox="0 0 375 456" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M415 146.881L375 352.881C361.5 386.381 310.4 453.881 214 455.881C93.5 458.381 156 391.881 59.5 330.381C-37 268.881 -33 196.381 -11.5 123.381C3.21467 73.4197 80.2274 18.0717 107.496 5.74437C130.192 -6.18937 164.445 -0.947524 220 34.9732C283.55 76.0639 321.323 102.142 345.5 118.668C361 128.072 395.1 137.081 407.5 97.8811C419.9 58.6811 417.667 114.214 415 146.881Z" fill="var(--color-tema-vector)"/>
-        </svg>
-      </div>
-
+      {/* 1. Wave Header (Oyun ve Test sayfasındaki ile aynı oran: 375/200) */}
       <WaveHeader 
-        title={
-          <>
-            SEÇİMLİ<br/>TEST
-          </>
-        } 
-        waveHeight="222px" 
-        titleTop="70px"
+        title={<>SEÇİMLİ<br/>TEST</>} 
+        aspect="aspect-[375/200]" 
+        titleTop="35%"
       />
 
-      {/* Main Content Area */}
-      <div className="relative z-20 flex flex-col items-center mt-70 mb-10">
+      {/* 2. Ana İçerik Kapsayıcısı (Yine 375px'e sabitlendi) */}
+      <div className="relative z-20 w-full max-w-93.75 flex flex-col items-center mt-16">
         
-        {/* Ana Turuncu Kutu - Animasyon eklendi */}
+        {/* Ana Turuncu Kutu - %79.2 (297/375) genişlik, 297/322 oran */}
         <div 
-          className="relative flex flex-col items-center bg-tema-kutu"
-          style={{
-            width: '297px',
-            height: '322px',
-            borderRadius: '9px',
-            boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)',
-            animation: 'boxFadeIn 0.6s ease-out forwards'
-          }}
+          className="relative flex flex-col items-center bg-tema-kutu w-[79.2%] aspect-297/322 rounded-[9px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+          style={{ animation: 'boxFadeIn 0.6s ease-out forwards' }}
         >
           {/* Sonuçlar Başlığı */}
-          <h2 
-            className="text-tema-yazi text-center mt-2.5"
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 800,
-              fontSize: '32px',
-              lineHeight: '100%'
-            }}
-          >
+          <h2 className="text-tema-yazi text-center mt-[3%] font-poppins font-extrabold text-[min(8.5vw,32px)] leading-none">
             SONUÇLAR
           </h2>
 
-          {/* İç Kutu (Açık Krem/Sarımsı) */}
+          {/* İç Kutu (Açık Krem/Sarımsı) - %88.55 (263/297) genişlik, %16.77 (54/322) üstten boşluk */}
           <div 
-            className="absolute bg-tema-enak overflow-hidden"
-            style={{
-              width: '263px',
-              height: '250px',
-              top: '54px',
-              borderRadius: '20px'
-            }}
+            className="absolute bg-tema-enak overflow-hidden w-[88.55%] aspect-263/250 rounded-[20px] top-[16.77%]"
           >
-            {/* Çapraz Çizgi SVG - Çizilme animasyonu eklendi */}
+            {/* Çapraz Çizgi SVG (w-full ve h-full ile otomatik kaplatıldı) */}
             <div 
               className="absolute inset-0 pointer-events-none" 
               style={{ 
-                top: '0', 
-                left: '-3px',
                 animation: 'revealLine 1s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards',
-                opacity: 0 // Başlangıçta görünmez olacak, animasyonla belirecek
+                opacity: 0
               }}
             > 
-              <svg width="269" height="253" viewBox="0 0 269 253" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* preserveAspectRatio="none" ile kutu esnese bile çizgi köşeden köşeye gider */}
+              <svg width="100%" height="100%" viewBox="0 0 269 253" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8ZM92.5 103.5L91.0143 103.707V103.707L92.5 103.5ZM189 165.5L187.671 166.195L189 165.5ZM252.5 244.5C252.5 248.918 256.082 252.5 260.5 252.5C264.918 252.5 268.5 248.918 268.5 244.5C268.5 240.082 264.918 236.5 260.5 236.5C256.082 236.5 252.5 240.082 252.5 244.5ZM8 8L7.97857 9.49985C30.6118 9.82318 80.7217 29.6792 91.0143 103.707L92.5 103.5L93.9857 103.293C83.4783 27.7208 32.0549 6.84349 8.02143 6.50015L8 8ZM92.5 103.5L91.0143 103.707C94.2683 127.11 99.8237 139.132 107.331 144.567C114.917 150.058 124.011 148.473 133.043 146.27C142.304 144.01 151.684 141.059 160.95 142.597C170.008 144.101 179.197 149.984 187.671 166.195L189 165.5L190.329 164.805C181.553 148.016 171.68 141.337 161.441 139.637C151.409 137.972 141.258 141.177 132.332 143.355C123.176 145.589 115.427 146.724 109.091 142.137C102.676 137.493 97.2317 126.64 93.9857 103.293L92.5 103.5ZM189 165.5L187.671 166.195C215.381 219.206 247.197 241.416 260.003 245.915L260.5 244.5L260.997 243.085C249.137 238.918 217.819 217.394 190.329 164.805L189 165.5Z" fill="#130D3D"/>
               </svg>
             </div>
 
-            {/* Yanlış (Sol Alt Alan) - Aşağıdan gelme animasyonu */}
+            {/* Yanlış Yazısı (Sol Alt Alan) */}
             <div 
-              className="absolute pointer-events-none" 
-              style={{ 
-                top: '100px', left: '-58px', width: '200px',
-                animation: 'slideUpWrong 0.6s ease-out 0.6s forwards',
-                opacity: 0 // Başlangıçta görünmez
-              }}
+              className="absolute pointer-events-none w-[76%] top-[40%] left-[-22%]" 
+              style={{ animation: 'slideUpWrong 0.6s ease-out 0.6s forwards', opacity: 0 }}
             >
-              <div 
-                style={{
-                  transform: 'rotate(90deg)',
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: 600,
-                  fontSize: '64px',
-                  color: 'rgba(19, 13, 61, 0.1)',
-                  lineHeight: '100%',
-                  textAlign: 'center'
-                }}
-              >
+              <div className="rotate-90 font-poppins font-semibold text-[min(17vw,64px)] text-tema-yazi/10 leading-none text-center">
                 yanlış
               </div>
             </div>
             
-            {/* Yanlış Sayısı - Tatlı pıt (pop-in) animasyonu */}
+            {/* Yanlış Sayısı */}
             <div 
-              className="absolute pointer-events-none text-tema-yazi" 
-              style={{ 
-                top: '145px', left: '75px', width: '67px',
-                animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.2s forwards',
-                opacity: 0
-              }}
+              className="absolute pointer-events-none text-tema-yazi w-[25%] top-[58%] left-[28.5%]" 
+              style={{ animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.2s forwards', opacity: 0 }}
             >
-              <div 
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: 900,
-                  fontSize: '90px',
-                  lineHeight: '100%',
-                  textAlign: 'center'
-                }}
-              >
+              <div className="font-poppins font-black text-[min(24vw,90px)] leading-none text-center">
                 {wrong}
               </div>
             </div>
 
-            {/* Doğru (Sağ Üst Alan) - Yukarıdan gelme animasyonu */}
+            {/* Doğru Yazısı (Sağ Üst Alan) */}
             <div 
-              className="absolute pointer-events-none" 
-              style={{ 
-                top: '75px', right: '-60px', width: '200px',
-                animation: 'slideDownCorrect 0.6s ease-out 0.6s forwards',
-                opacity: 0
-              }}
+              className="absolute pointer-events-none w-[76%] top-[30%] right-[-22.8%]" 
+              style={{ animation: 'slideDownCorrect 0.6s ease-out 0.6s forwards', opacity: 0 }}
             >
-              <div 
-                style={{
-                  transform: 'rotate(-90deg)',
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: 600,
-                  fontSize: '64px',
-                  color: 'rgba(19, 13, 61, 0.1)',
-                  lineHeight: '100%',
-                  textAlign: 'center'
-                }}
-              >
+              <div className="-rotate-90 font-poppins font-semibold text-[min(17vw,64px)] text-tema-yazi/10 leading-none text-center">
                 doğru
               </div>
             </div>
 
-            {/* Doğru Sayısı - Tatlı pıt (pop-in) animasyonu */}
+            {/* Doğru Sayısı */}
             <div 
-              className="absolute pointer-events-none text-tema-yazi" 
-              style={{ 
-                top: '10px', left: '90px', width: '106px',
-                animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards',
-                opacity: 0
-              }}
+              className="absolute pointer-events-none text-tema-yazi w-[40%] top-[4%] left-[34.2%]" 
+              style={{ animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards', opacity: 0 }}
             >
-              <div 
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: 900,
-                  fontSize: '90px',
-                  lineHeight: '100%',
-                  textAlign: 'center'
-                }}
-              >
+              <div className="font-poppins font-black text-[min(24vw,90px)] leading-none text-center">
                 {correct}
               </div>
             </div>
@@ -204,23 +118,11 @@ export default function SelectiveGameResultPage() {
           </div>
         </div>
 
-        {/* Ana Menü Butonu */}
+        {/* Ana Menü Butonu - %40 (150/375) genişlik, 150/44 oran */}
         <button
           onClick={() => navigate('/')}
-          className="bg-tema-buton2 text-white flex justify-center items-center active:scale-95 transition-transform hover:opacity-90"
-          style={{
-            width: '150px',
-            height: '44px',
-            marginTop: '32px',
-            borderRadius: '10px',
-            boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 800,
-            fontSize: '18px',
-            color: 'var(--color-tema-enak)',
-            animation: 'boxFadeIn 0.5s ease-out 1.5s forwards',
-            opacity: 0 // Animasyon bitene kadar butonu gizliyoruz
-          }}
+          className="w-[40%] aspect-150/44 mt-8 bg-tema-buton2 text-tema-enak flex justify-center items-center active:scale-95 transition-transform hover:opacity-90 rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] font-poppins font-extrabold text-[min(4.8vw,18px)]"
+          style={{ animation: 'boxFadeIn 0.5s ease-out 1.5s forwards', opacity: 0 }}
         >
           ANA MENÜ
         </button>

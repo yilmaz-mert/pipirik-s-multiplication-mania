@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import WaveHeader from '../components/WaveHeader';
 import { Delete, Check } from 'lucide-react';
@@ -8,36 +8,7 @@ export default function SelectiveGamePage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [userInput, setUserInput] = useState('');
-  const [status, setStatus] = useState('idle'); // 'idle', 'correct', 'wrong'
-  const [results, setResults] = useState({ correct: 0, wrong: 0 });
-
-  const [playClick] = useSound('/sounds/click.ogg', { volume: 0.5 });
-  const [playCorrect] = useSound('/sounds/correct.ogg');
-  const [playWrong] = useSound('/sounds/wrong.ogg');
-
-  // Animasyon CSS'leri
-  const gameAnimations = `
-    @keyframes slideInQuestion {
-      from { opacity: 0; transform: translateX(50px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes shakeWrong {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
-    }
-    @keyframes bounceCorrect {
-      0%, 100% { transform: scale(1); }
-      40% { transform: scale(1.15); }
-      60% { transform: scale(0.95); }
-      80% { transform: scale(1.05); }
-    }
-  `;
-
-  useEffect(() => {
+  const [questions] = useState(() => {
     let newQuestions = [];
     const tables = location.state?.selected || ['mix'];
     
@@ -58,14 +29,54 @@ export default function SelectiveGamePage() {
       });
       newQuestions = newQuestions.sort(() => Math.random() - 0.5);
     }
-    setQuestions(newQuestions);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    
+    return newQuestions;
+  });
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [status, setStatus] = useState('idle'); 
+  const [results, setResults] = useState({ correct: 0, wrong: 0 });
+
+  const [playClick] = useSound('/sounds/click.ogg', { volume: 0.5 });
+  const [playCorrect] = useSound('/sounds/correct.ogg');
+  const [playWrong] = useSound('/sounds/wrong.ogg');
+
+  const gameAnimations = `
+    @keyframes slideInQuestion {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    @keyframes bounceCorrect {
+      0%, 100% { transform: scale(1); }
+      40% { transform: scale(1.15); }
+      60% { transform: scale(0.95); }
+      80% { transform: scale(1.05); }
+    }
+    @keyframes titleSlideUp {
+      from { top: 35%; } /* Test sayfasındaki konum */
+      to { top: 25%; }   /* Oyun sayfasındaki hedef konum */
+    }
+    @keyframes fadeInProgress {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  `;
+
+
 
   const currentQuestion = questions[currentIndex];
 
   const handleNumpad = (value) => {
     if (status !== 'idle') return; 
+
+    // Eğer henüz hiç sayı girilmemişse ve basılan tuş '0' ise hiçbir şey yapma
+    if (userInput === '' && value === '0') return;
+
     playClick();
     if (userInput.length < 3) {
       setUserInput(prev => prev + value);
@@ -94,7 +105,6 @@ export default function SelectiveGamePage() {
       setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
     }
 
-    // Animasyonu izlemesi için 1 saniye bekletiyoruz
     setTimeout(() => {
       if (currentIndex + 1 < questions.length) {
         setCurrentIndex(prev => prev + 1);
@@ -108,69 +118,79 @@ export default function SelectiveGamePage() {
     }, 1000);
   };
 
-  if (questions.length === 0) return <div>Yükleniyor...</div>;
+  if (questions.length === 0) return <div className="flex items-center justify-center h-full font-poppins text-tema-yazi">Yükleniyor...</div>;
 
   const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="relative w-full h-full min-h-screen overflow-visible flex flex-col items-center">
+    <div className="w-full h-full relative flex flex-col items-center pb-10">
       <style>{gameAnimations}</style>
       
-      {/* Background SVG */}
-      <div className="absolute pointer-events-none z-10" style={{ top: '309px', left: '-24px' }}>
-        <svg width="441" height="456" viewBox="0 0 375 456" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M415 146.881L375 352.881C361.5 386.381 310.4 453.881 214 455.881C93.5 458.381 156 391.881 59.5 330.381C-37 268.881 -33 196.381 -11.5 123.381C3.21467 73.4197 80.2274 18.0717 107.496 5.74437C130.192 -6.18937 164.445 -0.947524 220 34.9732C283.55 76.0639 321.323 102.142 345.5 118.668C361 128.072 395.1 137.081 407.5 97.8811C419.9 58.6811 417.667 114.214 415 146.881Z" fill="var(--color-tema-vector)"/>
-        </svg>
-      </div>
-
-      <WaveHeader title={<>SEÇİMLİ<br/>TEST</>} waveHeight="222px" titleTop="60px" />
-
-      <div className="relative z-20 flex flex-col items-center w-full max-w-93.75 mx-auto pt-40 pb-5">
-        
-        {/* Progress Bar ve Sayı Göstergesi */}
-        <div className="w-full flex-col px-4 mb-12 -mt-2">
-          <div className="flex justify-end w-83.75 mx-auto">
-            <div className="flex justify-center items-center mb-1 text-tema-enak font-poppins font-extrabold text-[15px] leading-none tracking-[0.04em]">
+      <WaveHeader 
+        title={<>SEÇİMLİ<br/>TEST</>} 
+        aspect="aspect-[375/220]" 
+        titleTop="25%" 
+        // Yazının yukarı kayma animasyonu
+        containerClassName="animate-[titleSlideUp_0.6s_ease-out_forwards]"
+      >
+        {/* İlerleme Çubuğu: fadeInProgress animasyonu ve başlangıçta opacity-0 eklendi */}
+        <div 
+          className="w-[89.33%] max-w-83.75 flex flex-col animate-[fadeInProgress_0.5s_ease-out_0.4s_forwards] opacity-0"
+        >
+          <div className="flex justify-end w-full mb-1">
+            <span className="text-tema-enak font-poppins font-extrabold text-[13px] leading-none">
               {currentIndex + 1} / {questions.length}
-            </div>
+            </span>
           </div>
-          
-          <div className="w-83.75 h-0 mx-auto relative rounded-full" style={{ border: '5px solid var(--color-tema-enak)' }}>
+          <div className="w-full h-2.5 bg-tema-enak rounded-full shadow-inner">
             <div 
-              className="absolute -left-1.25 -top-1.25 h-0 rounded-full transition-all duration-300"
-              style={{
-                 border: '5px solid var(--color-tema-kutu)',
-                 width: `calc(${progressPercentage}% + 5px)`
-              }}
-            ></div>
+              className="h-full bg-tema-kutu rounded-full transition-all duration-300"
+              style={{ width: `${progressPercentage}%` }}
+            />
           </div>
         </div>
+      </WaveHeader>
 
-        {/* Soru Alanı - key={currentIndex} sayesinde her yeni soruda kayma animasyonu tetiklenir */}
+      {/* 2. Ana İçerik Kapsayıcısı */}
+      <div className="relative z-20 w-full max-w-93.75 flex flex-col items-center mt-4">
+
+        {/* SORU ALANI - Figma: 335x96 (L:20, T:274) */}
+        {/* w-[89.33%] = 335/375. Artık tam 335px çıkacak. */}
         <div 
           key={currentIndex}
-          className="w-83.75 h-24 bg-tema-kutu rounded-[20px] shadow-sm flex items-center justify-around px-4 mb-6 relative"
+          className="relative w-[89.33%] aspect-335/96 bg-tema-kutu rounded-[20px] shadow-sm mb-2"
           style={{ animation: 'slideInQuestion 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}
         >
-          <div className="w-18.5 h-17.5 bg-tema-enak rounded-[20px] flex items-center justify-center">
-            <span className="font-poppins font-extrabold text-[36px] text-tema-yazi">{currentQuestion?.num1}</span>
+          {/* Sayı 1 Kutusu - Figma: 74x70 (L:36, T:285) -> İç Koordinat: L:16, T:11 */}
+          <div className="absolute w-[22.09%] aspect-74/70 left-[4.77%] top-[11.45%] bg-tema-enak rounded-[20px] flex items-center justify-center">
+            <span className="font-poppins font-extrabold text-[min(9.6vw,36px)] text-tema-yazi">{currentQuestion?.num1}</span>
           </div>
-          <span className="font-poppins font-extrabold text-[36px] text-tema-yazi">×</span>
-          <div className="w-18.5 h-17.5 bg-tema-enak rounded-[20px] flex items-center justify-center">
-            <span className="font-poppins font-extrabold text-[36px] text-tema-yazi">{currentQuestion?.num2}</span>
+
+          {/* "x" Sembolü */}
+          <div className="absolute left-[32.83%] top-[50%] -translate-x-1/2 -translate-y-1/2">
+            <span className="font-poppins font-extrabold text-[min(9.6vw,36px)] text-tema-yazi">×</span>
           </div>
-          <span className="font-poppins font-extrabold text-[36px] text-tema-yazi">=</span>
-          
-          {/* Cevap Kutusu - Doğru/Yanlış durumuna göre zıplar/titrer */}
+
+          {/* Sayı 2 Kutusu - Figma: 74x70 (L:150) -> İç Koordinat: L:130 */}
+          <div className="absolute w-[22.09%] aspect-74/70 left-[38.8%] top-[11.45%] bg-tema-enak rounded-[20px] flex items-center justify-center">
+            <span className="font-poppins font-extrabold text-[min(9.6vw,36px)] text-tema-yazi">{currentQuestion?.num2}</span>
+          </div>
+
+          {/* "=" Sembolü */}
+          <div className="absolute left-[67.16%] top-[50%] -translate-x-1/2 -translate-y-1/2">
+            <span className="font-poppins font-extrabold text-[min(9.6vw,36px)] text-tema-yazi">=</span>
+          </div>
+
+          {/* Cevap Kutusu - Figma: 74x70 (L:266) -> İç Koordinat: L:246 */}
           <div 
-            className="w-18.5 h-17.5 rounded-[20px] flex items-center justify-center transition-colors duration-300"
+            className="absolute w-[22.09%] aspect-74/70 left-[73.43%] top-[11.45%] rounded-[20px] flex items-center justify-center transition-colors duration-300 shadow-inner"
             style={{
               backgroundColor: status === 'correct' ? '#D4EDDA' : status === 'wrong' ? '#F8D7DA' : 'var(--color-tema-enak)',
               animation: status === 'correct' ? 'bounceCorrect 0.6s ease-in-out' : status === 'wrong' ? 'shakeWrong 0.4s ease-in-out' : 'none'
             }}
           >
             <span 
-              className="font-poppins font-extrabold text-[36px]"
+              className="font-poppins font-extrabold text-[min(9.6vw,36px)]"
               style={{ color: status === 'correct' ? '#155724' : status === 'wrong' ? '#721C24' : 'var(--color-tema-yazi)' }}
             >
               {userInput}
@@ -178,38 +198,38 @@ export default function SelectiveGamePage() {
           </div>
         </div>
 
-        {/* Numpad */}
-        <div className="w-76 grid grid-cols-3 gap-5 place-items-center mt-2">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-             <button
-                key={num}
-                onClick={() => handleNumpad(num.toString())}
-                className="w-18.5 h-17.5 bg-tema-kutu rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center active:scale-95 active:bg-tema-secili transition-all duration-200"
-             >
-                <span className="font-poppins font-extrabold text-[36px] text-tema-yazi">{num}</span>
-             </button>
+        {/* 3. NUMPAD - Figma: 304x334 ölçüleri, Soru Alanı (335px) ile aynı hizada */}
+        {/* w-[89.33%] (335/375) yaparak Numpad kapsayıcısını Soru Alanı ile aynı genişliğe sabitledik */}
+        <div 
+          className="relative w-[89.33%] aspect-335/334 mt-7.5" // 400px - (274+96) = 30px boşluk
+        >
+          {/* Numpad Butonları - 3 Sütun ve 4 Satır Düzeni */}
+          {[
+            { val: '1', col: '4.77%', row: '0%' },     { val: '2', col: '38.80%', row: '0%' },    { val: '3', col: '73.43%', row: '0%' },
+            { val: '4', col: '4.77%', row: '26.34%' },  { val: '5', col: '38.80%', row: '26.34%' }, { val: '6', col: '73.43%', row: '26.34%' },
+            { val: '7', col: '4.77%', row: '52.69%' },  { val: '8', col: '38.80%', row: '52.69%' }, { val: '9', col: '73.43%', row: '52.69%' },
+            { val: 'del', col: '4.77%', row: '79.04%' }, { val: '0', col: '38.80%', row: '79.04%' }, { val: 'check', col: '73.43%', row: '79.04%' }
+          ].map((item) => (
+            <button
+              key={item.val}
+              onClick={() => {
+                if (item.val === 'del') handleDelete();
+                else if (item.val === 'check') handleCheck();
+                else handleNumpad(item.val);
+              }}
+              className={`absolute w-[22.09%] aspect-74/70 rounded-[18px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center active:scale-90 transition-all duration-150
+                ${item.val === 'check' ? (userInput === '' ? 'bg-gray-300 opacity-50' : 'bg-tema-buton2') : 'bg-tema-kutu'}`}
+              style={{ left: item.col, top: item.row }}
+            >
+              {item.val === 'del' ? (
+                <Delete size={32} strokeWidth={3} className="text-tema-yazi" />
+              ) : item.val === 'check' ? (
+                <Check size={40} strokeWidth={4} className={userInput === '' ? 'text-gray-500' : 'text-tema-enak'} />
+              ) : (
+                <span className="font-poppins font-extrabold text-[min(9.6vw,36px)] text-tema-yazi">{item.val}</span>
+              )}
+            </button>
           ))}
-          
-          <button
-              onClick={handleDelete}
-              className="w-18.5 h-17.5 bg-tema-kutu rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center active:scale-95 active:bg-tema-secili transition-all duration-200"
-          >
-             <Delete size={32} strokeWidth={3} className="text-tema-yazi" />
-          </button>
-          
-          <button
-              onClick={() => handleNumpad('0')}
-              className="w-18.5 h-17.5 bg-tema-kutu rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center active:scale-95 active:bg-tema-secili transition-all duration-200"
-          >
-             <span className="font-poppins font-extrabold text-[36px] text-tema-yazi">0</span>
-          </button>
-          
-          <button
-              onClick={handleCheck}
-              className="w-18.5 h-17.5 bg-tema-kutu rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center active:scale-95 active:bg-tema-secili transition-all duration-200"
-          >
-             <Check size={40} strokeWidth={4} className="text-tema-yazi" />
-          </button>
         </div>
 
       </div>

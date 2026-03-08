@@ -2,30 +2,35 @@
 import { Home, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function WaveHeader({ title, waveHeight = '313px', titleTop = '130px', showIcons = true }) {
+// waveHeight ve titleTop değerlerini artık % veya rem/px olarak daha esnek kullanabiliriz
+export default function WaveHeader({ 
+  title, 
+  titleTop = '42%', 
+  showIcons = true, 
+  aspect = "aspect-375/275",
+  children,
+  containerClassName = ""
+}) {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div className={`relative w-full shrink-0 ${aspect}`}>
+      {/* 1. Arka Plan SVG ve Dolgu Alanı */}
       <div 
-        className="absolute z-0 pointer-events-none"
-        style={{ 
-          top: '0', 
-          left: '50%', 
-          transform: 'translateX(-50%)',
-          width: 'calc(var(--vp-w) / var(--app-scale, 1))', 
-          height: waveHeight,
-        }}
+        className="absolute inset-0 z-0 pointer-events-none w-full h-full"
       >
+        {/* Üstteki boşluğu kapatan dolgu rengi */}
         <div 
           className="absolute w-full"
           style={{ 
             backgroundColor: '#9CB9B7', 
-            height: '2000px', 
+            height: '100vh', // Sayfanın çok yukarısına çıksa bile boşluk kalmaz
             bottom: '99%', 
             left: 0
           }} 
         />
+        
+        {/* Dalga Formu */}
         <svg 
           viewBox="0 0 375 305" 
           className="w-full h-full block relative z-10" 
@@ -40,36 +45,41 @@ export default function WaveHeader({ title, waveHeight = '313px', titleTop = '13
           />
         </svg>
       </div>
+      
+      {/* 2. Başlık ve Alt İçerik Grubu */}
+      {title && (
+        <div 
+          className={`absolute w-full z-10 flex flex-col items-center gap-3 ${containerClassName}`} 
+          style={{ top: titleTop }}
+        >
+          <h1 className="font-outfit font-extrabold text-[7.5vw] min-[512px]:text-[38.4px] text-tema-enak drop-shadow-lg text-center leading-tight px-4">
+            {title}
+          </h1>
+          {/* Buraya dışarıdan gönderilen ilerleme çubuğu gelecek */}
+          {children}
+        </div>
+      )}
 
-      {/* İkonlar (Geri ve Home) - Sadece showIcons true ise renderla */}
+      {/* 3. İkonlar (Geri ve Home) */}
       {showIcons && (
-        <div className="absolute top-8 w-full px-7.5 flex justify-between items-center z-50 pointer-events-none">
+        <div className="absolute top-[10%] w-full px-6 flex justify-between items-center z-50">
           <button 
             type="button"
             onClick={() => navigate(-1)} 
-            className="text-[#1D324F] hover:opacity-80 pointer-events-auto p-2"
+            className="text-[#1D324F] active:scale-90 transition-transform p-2 cursor-pointer"
           >
             <ChevronLeft size={28} strokeWidth={3} />
           </button>
           <button 
             type="button"
             onClick={() => navigate('/')} 
-            className="text-[#1D324F] hover:opacity-80 pointer-events-auto p-2"
+            className="text-[#1D324F] active:scale-90 transition-transform p-2 cursor-pointer"
           >
             <Home size={28} strokeWidth={3} />
           </button>
         </div>
       )}
-      
-      {/* Başlık */}
-      {title && (
-        <h1 
-          className="absolute w-full font-outfit font-extrabold text-[36px] text-tema-enak text-center z-10 leading-tight"
-          style={{ top: titleTop }}
-        >
-          {title}
-        </h1>
-      )}
-    </>
+
+    </div>
   );
 }
