@@ -33,7 +33,7 @@ export default function EzberKartlariPage() {
   return (
     <div className="relative w-full h-full flex flex-col items-center bg-tema-arka-plan overflow-hidden">
       
-      {/* 1. YILAN KATMANI: Sadece tablo göründüğünde aktif olur */}
+      {/* 1. YILAN KATMANI */}
       <SnakeDecorator selectedNumber={selectedNumber} />
 
       <div className="relative z-10 w-full flex flex-col items-center" style={{ paddingTop: '15%' }}>
@@ -53,9 +53,8 @@ export default function EzberKartlariPage() {
                   key={num.val}
                   variants={itemVariants}
                   onClick={() => setSearchParams({ sayi: num.val })}
-                  // Tüm butonlar font-bold olarak kalıyor
-                  className={`w-full bg-tema-kutu text-tema-yazi font-poppins font-bold uppercase text-[5.4vw] min-[512px]:text-[24px] leading-none text-center shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)] active:scale-95 flex items-center justify-center
-                    ${idx === 0 ? 'h-[5vh] rounded-t-[9px]' : 'h-[4.2vh]'}
+                  className={`w-full bg-tema-kutu text-tema-yazi font-poppins font-bold uppercase text-[5.4vw] min-[512px]:text-[24px] leading-none text-center shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)] active:scale-95 flex items-center justify-center h-[5vh]
+                    ${idx === 0 ? 'rounded-t-[9px]' : ''}
                     ${idx === numbers.length - 1 ? 'rounded-b-[9px]' : ''}
                   `}
                 >
@@ -70,7 +69,7 @@ export default function EzberKartlariPage() {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="w-[80%] flex flex-col shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)] rounded-[9px]"
+              className="w-[80%] flex flex-col shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)] rounded-[9px] overflow-hidden"
               style={{ height: '40vh' }}
             >
               {[...Array(10)].map((_, index) => {
