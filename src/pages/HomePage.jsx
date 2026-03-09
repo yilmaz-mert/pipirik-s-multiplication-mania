@@ -54,8 +54,17 @@ export default function HomePage() {
           style={{ animation: 'fadeInCard 0.6s ease-out forwards' }} 
         >
           <div className="relative w-full h-full">
-              {/* EZBER KARTLARI */}
-            <div style={{ animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards', opacity: 0, position: 'absolute', left: '1.68%', top: '5.08%', width: '56.04%', height: '46.50%' }}>
+            {/* EZBER KARTLARI */}
+            <div style={{ 
+              animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards', 
+              opacity: 0, 
+              position: 'absolute', 
+              left: '1.68%', 
+              top: '5.08%', 
+              width: '56.04%', 
+              height: '46.50%',
+              pointerEvents: 'none' // Bu konteyner artık arkadaki butonları bloklamaz
+            }}>
               <PuzzleButton
                 title={<>EZBER<br/>KARTLARI</>}
                 Icon={EzberSVG}
@@ -66,7 +75,16 @@ export default function HomePage() {
             </div>
 
             {/* SIRALI TEST */}
-            <div style={{ animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards', opacity: 0, position: 'absolute', left: '47.56%', top: '5.14%', width: '51.40%', height: '57.22%' }}>
+            <div style={{ 
+              animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards', 
+              opacity: 0, 
+              position: 'absolute', 
+              left: '47.56%', 
+              top: '5.14%', 
+              width: '51.40%', 
+              height: '57.22%',
+              pointerEvents: 'none' // Bloklamayı önler
+            }}>
               <PuzzleButton
                 title={<>SIRALI<br/>TEST</>} 
                 Icon={SiraliSVG}
@@ -77,7 +95,16 @@ export default function HomePage() {
             </div>
 
             {/* MEYDAN OKUMA */}
-            <div style={{ animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.7s forwards', opacity: 0, position: 'absolute', left: '1.68%', top: '42.22%', width: '60.67%', height: '53.74%' }}>
+            <div style={{ 
+              animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.7s forwards', 
+              opacity: 0, 
+              position: 'absolute', 
+              left: '1.68%', 
+              top: '42.22%', 
+              width: '60.67%', 
+              height: '53.74%',
+              pointerEvents: 'none' // Bloklamayı önler
+            }}>
               <PuzzleButton
                 title={<>MEYDAN<br/>OKUMA</>} 
                 Icon={MeydanSVG}
@@ -88,7 +115,16 @@ export default function HomePage() {
             </div>
 
             {/* SEÇİMLİ TEST */}
-            <div style={{ animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.9s forwards', opacity: 0, position: 'absolute', left: '44.21%', top: '32.86%', width: '55.34%', height: '64.17%' }}>
+            <div style={{ 
+              animation: 'popInButton 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.9s forwards', 
+              opacity: 0, 
+              position: 'absolute', 
+              left: '44.21%', 
+              top: '32.86%', 
+              width: '55.34%', 
+              height: '64.17%',
+              pointerEvents: 'none' // Bloklamayı önler
+            }}>
               <PuzzleButton
                 title={<>SEÇİMLİ<br/>TEST</>} 
                 Icon={TestSVG}

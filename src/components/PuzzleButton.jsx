@@ -1,17 +1,18 @@
-import React from 'react';
-
+// src/components/PuzzleButton.jsx
 // eslint-disable-next-line no-unused-vars
 export default function PuzzleButton({ title, Icon, onClick, style, textStyle, ariaLabel }) {
   return (
     <button 
       style={style} 
-      className="absolute flex items-start justify-start border-none bg-transparent cursor-pointer p-0 m-0 focus:outline-none"
-      onClick={onClick}
+      // pointer-events-none: Butonun dikdörtgen alanı tıklamayı arkaya geçirir
+      className="absolute flex items-start justify-start border-none bg-transparent cursor-pointer p-0 m-0 focus:outline-none pointer-events-none"
       aria-label={ariaLabel || (typeof title === 'string' ? title : undefined)}
     >
       <div className="w-full h-full relative">
         <div className="w-full h-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex">
+          {/* pointer-events-auto: Sadece SVG (ve içindeki path) tıklamayı yakalar */}
           <Icon 
+            onClick={onClick}
             className="w-full h-full transition-transform duration-200 active:scale-95 pointer-events-auto" 
           />
         </div>
