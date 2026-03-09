@@ -17,6 +17,10 @@ const getHeaderConfig = (pathname) => {
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
     case '/ezber':
       return { title: 'EZBER\nKARTLARI', showIcons: true, aspectRatio: '375 / 220', titleTop: '35%' };
+    case '/sirali':
+      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' };
+    case '/sirali-oyun':
+      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' };
     default:
       return { title: 'PİPİRİK', showIcons: true, aspectRatio: '375 / 210', titleTop: '35%' };
   }

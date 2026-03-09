@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WaveHeader from '../components/WaveHeader';
 
 const questionsList = [
   { id: 2, label: 'İKİLER' },

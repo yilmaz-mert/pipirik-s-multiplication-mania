@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import WaveHeader from '../components/WaveHeader';
 
 export default function SelectiveGameResultPage() {
   const navigate = useNavigate();

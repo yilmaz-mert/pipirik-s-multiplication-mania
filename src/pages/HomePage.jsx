@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EzberSVG, SiraliSVG, MeydanSVG, TestSVG } from '../components/PuzzleIcons';
 import foxImage from '../assets/foxy.png';
-import WaveHeader from '../components/WaveHeader';
 import PuzzleButton from '../components/PuzzleButton';
 
 export default function HomePage() {
