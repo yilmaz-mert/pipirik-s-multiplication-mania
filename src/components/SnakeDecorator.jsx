@@ -3,60 +3,58 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SnakeDecorator({ selectedNumber }) {
-  /**
-   * KUSURSUZ İP ROTASI (Düğümlü Halat)
-   * Sağ alt (450,350) noktasından başlar, ekranın soluna doğru kavis çizer, 
-   * sağ üste doğru yönelir ve görünmeyen sağ kısımda (550) birleşir.
-   */
-  const ROPE_PATH = "M 450, 350 C 250, 350 150, 300 80, 250 C 10, 200 10, 100 150, 80 C 290, 60 350, 150 450, 100 C 550, 50 550, 350 450, 350 Z";
+  // YOLUN YÖNÜ DEĞİŞTİRİLDİ: 
+  // Artık yukarıda soldan sağa akıyor, böylece üst kısım DÜZ görünecek.
+  const ROPE_PATH = "M356.503 212.664C385.805 244.783 477.003 285.664 403.503 331.664C379.029 346.981 364.647 347.375 353.003 346.164C329.678 343.739 320.356 325.157 284.003 339.164C229.503 360.164 212.553 377.803 180.503 385.664C154.003 392.164 143.503 392.035 133.003 389.164C109.836 382.831 61.3029 352.164 28.5029 262.164C13.6933 221.528 1.17543 200.374 1.00314 180.164C0.698449 144.424 22.4473 123.881 38.5029 105.664C64.5029 76.1641 244.003 -34.8359 266.003 12.6641C288.003 60.1641 330.503 184.164 356.503 212.664Z";
 
-  // Ana SVG Kapsayıcısı Varyantı: Çıkış anında metnin kayboluşunu izlemek için ufak bir gecikme (delay) eklendi
   const svgVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 0.15, transition: { duration: 0.2 } },
-    exit: { opacity: 0, transition: { duration: 0.3, delay: 0.7 } } 
+    visible: { opacity: 0.15, transition: { duration: 0.3 } },
+    exit: { opacity: 0, transition: { duration: 0.3, delay: 0.6 } } 
   };
 
-  // Metin (Yılan) Akış Varyantı: startOffset kullanılarak metnin ip üzerindeki konumu itiliyor
   const textVariants = {
-    hidden: { startOffset: "-100%" }, // Ekranın gerisinde bekler
+    hidden: { startOffset: "100%" }, // Terse döndüğü için offset yönünü de çevirdim
     visible: { 
       startOffset: "0%", 
-      transition: { duration: 0.9, ease: "easeOut" } // Hızlıca kayarak yerini alır
+      transition: { duration: 0.9, ease: "easeOut" } 
     },
     exit: { 
-      startOffset: "100%", 
-      transition: { duration: 0.9, ease: "easeIn" } // Hızlanarak geldiği yöne doğru terk eder
+      startOffset: "-100%", 
+      transition: { duration: 0.9, ease: "easeIn" } 
     }
   };
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       <AnimatePresence>
         {selectedNumber && (
           <motion.svg
             key={selectedNumber}
-            viewBox="0 0 450 450"
-            className="absolute w-[120vw] min-[512px]:w-150 h-auto opacity-[0.15] text-tema-yazi"
+            viewBox="-50 -80 600 550"
+            style={{
+              position: 'absolute',
+              width: '160%', 
+              height: 'auto',
+              top: '-10%', 
+              left: '-8%',
+            }}
             variants={svgVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
+            className="text-tema-yazi"
           >
             <defs>
               <path id="ropePath" d={ROPE_PATH} />
             </defs>
             <text 
-              className="font-poppins font-bold uppercase text-[28px]" 
+              // 'font-bold' kaldırıldı, sadece normal font kullanılıyor.
+              className="font-poppins font-bold uppercase text-[20px]" 
               fill="currentColor"
             >
-              {/* motion.textPath ile SVG'nin kendi akış özelliğini animasyona bağlıyoruz */}
-              <motion.textPath 
-                href="#ropePath"
-                variants={textVariants}
-              >
-                {/* İpin tüm yüzeyini dolduracak kadar rakam eklendi */}
-                {Array(60).fill(selectedNumber).join('      ')}
+              <motion.textPath href="#ropePath" variants={textVariants} >
+                {Array(180).fill(selectedNumber).join('   ')}
               </motion.textPath>
             </text>
           </motion.svg>
