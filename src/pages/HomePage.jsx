@@ -32,9 +32,6 @@ export default function HomePage() {
     <div className="w-full h-full relative flex flex-col items-center pb-10">
       <style>{homeAnimations}</style>
 
-      {/* 1. Üst Dalga */}
-      <WaveHeader title="AKIL KATI" showIcons={false} />
-
       <div className="relative w-[92%] mt-12 flex flex-col items-center"> 
         
         {/* Maskot Tilki: 

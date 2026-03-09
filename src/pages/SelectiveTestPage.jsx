@@ -56,12 +56,6 @@ export default function SelectiveTestPage() {
 return (
     <div className="w-full h-full relative flex flex-col items-center overflow-x-hidden overflow-y-auto pb-10">
       <style>{testAnimations}</style>
-      
-      <WaveHeader 
-        title={<>SEÇİMLİ<br/>TEST</>} 
-        aspect="aspect-375/210" 
-        titleTop="35%" 
-      />
 
       <div className="relative z-20 w-[92%] max-w-90 flex flex-col items-center mt-2">
         

@@ -1,19 +1,43 @@
 // src/components/Layout.jsx
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import WaveHeader from './WaveHeader';
 
-export default function Layout({ children = true }) {
+// Rota bazlı Header Konfigürasyonu
+const getHeaderConfig = (pathname) => {
+  switch (pathname) {
+    case '/':
+      return { title: 'AKIL KATI', showIcons: false, aspectRatio: '375 / 275', titleTop: '42%' };
+    case '/secimli':
+      // \n karakteri whitespace-pre-wrap sayesinde otomatik alt satıra atar
+      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 210', titleTop: '35%' };
+    case '/oyun':
+      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' };
+    case '/secimli-sonuc':
+      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
+    default:
+      return { title: 'PİPİRİK', showIcons: true, aspectRatio: '375 / 210', titleTop: '35%' };
+  }
+};
+
+export default function Layout({ children }) {
   const location = useLocation();
-
   const isHomePage = location.pathname === "/";
+  const headerConfig = getHeaderConfig(location.pathname);
+
   return (
     <div className="fixed inset-0 w-full h-full flex justify-center bg-white bg-grid-paper overflow-hidden select-none touch-none">
-      
-      {/* Ana Mobil Konteyner (375px Referans Noktamız) */}
       <div className="w-full max-w-lg h-dvh relative flex flex-col overflow-x-hidden">
-        
-        {/* PROFESYONEL DOKUNUŞ: Ortak Sarı Arka Plan */}
-        {!isHomePage && (
+
+          {/* 1. WAVE HEADER BURAYA GELDİ (headerConfig artık kullanılıyor) */}
+          <WaveHeader 
+            title={headerConfig.title}
+            showIcons={headerConfig.showIcons}
+            aspectRatio={headerConfig.aspectRatio}
+            titleTop={headerConfig.titleTop}
+          />
+
+                {!isHomePage && (
           <div 
             className="absolute z-0 pointer-events-none opacity-100"
             style={{ 
@@ -30,7 +54,8 @@ export default function Layout({ children = true }) {
         )}
 
         {/* Sayfa İçerikleri */}
-        <div className="relative z-10 w-full h-full flex flex-col items-center">
+        {/* flex-1 ekledik ki Header büyüyüp küçüldüğünde alt içerikleri de nazikçe aşağı itsin */}
+        <div className="relative z-10 w-full flex-1 flex flex-col items-center">
           {children}
         </div>
       </div>

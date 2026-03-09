@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import WaveHeader from '../components/WaveHeader';
-import { Delete, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import useSound from 'use-sound';
 
 export default function SelectiveGamePage() {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // 1. STATE TANIMLAMALARI
   const [questions] = useState(() => {
     let newQuestions = [];
     const tables = location.state?.selected || ['mix'];
@@ -29,7 +30,6 @@ export default function SelectiveGamePage() {
       });
       newQuestions = newQuestions.sort(() => Math.random() - 0.5);
     }
-    
     return newQuestions;
   });
 
@@ -37,16 +37,39 @@ export default function SelectiveGamePage() {
   const [userInput, setUserInput] = useState('');
   const [status, setStatus] = useState('idle'); 
   const [results, setResults] = useState({ correct: 0, wrong: 0 });
+  const [isExiting, setIsExiting] = useState(false);
 
+  // ✅ PROGRESS BAR ÇÖZÜMÜ: Portal hedefini useEffect ile yakalıyoruz.
+  // ESLint hatasını önlemek için microtask (Promise) kullanıyoruz.
+  const [portalTarget, setPortalTarget] = useState(null);
+  useEffect(() => {
+    const target = document.getElementById('wave-header-portal-target');
+    if (target) {
+      Promise.resolve().then(() => setPortalTarget(target));
+    }
+  }, []); 
+
+  // Ses Hook'ları
   const [playClick] = useSound('/sounds/click.ogg', { volume: 0.5 });
   const [playCorrect] = useSound('/sounds/correct.ogg');
   const [playWrong] = useSound('/sounds/wrong.ogg');
 
-  // Animasyonları şimdilik burada tutuyoruz, ancak ileride index.css veya tailwind.config.js'e taşıyabilirsin.
+  if (questions.length === 0) return null;
+
+  const currentQuestion = questions[currentIndex];
+  const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
+  const numpadKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'del', '0', 'check'];
+
+  // ✅ GELİŞTİRİLMİŞ ANİMASYONLAR
   const gameAnimations = `
     @keyframes slideInQuestion {
-      from { opacity: 0; transform: translateX(50px); }
-      to { opacity: 1; transform: translateX(0); }
+      0% { opacity: 0; transform: translateX(-100%) scale(0.9); }
+      70% { transform: translateX(5%) scale(1.02); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @keyframes slideOutQuestion {
+      0% { opacity: 1; transform: translateX(0) scale(1); }
+      100% { opacity: 0; transform: translateX(100%) scale(0.9); }
     }
     @keyframes shakeWrong {
       0%, 100% { transform: translateX(0); }
@@ -59,26 +82,17 @@ export default function SelectiveGamePage() {
       60% { transform: scale(0.95); }
       80% { transform: scale(1.05); }
     }
-    @keyframes titleSlideUp {
-      from { top: 35%; } 
-      to { top: 25%; }   
-    }
     @keyframes fadeInProgress {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
   `;
 
-  const currentQuestion = questions[currentIndex];
-
   const handleNumpad = (value) => {
     if (status !== 'idle') return; 
     if (userInput === '' && value === '0') return;
-
     playClick();
-    if (userInput.length < 3) {
-      setUserInput(prev => prev + value);
-    }
+    if (userInput.length < 3) setUserInput(prev => prev + value);
   };
 
   const handleDelete = () => {
@@ -90,8 +104,7 @@ export default function SelectiveGamePage() {
   const handleCheck = () => {
     if (status !== 'idle' || userInput === '') return;
     
-    const parsedInput = parseInt(userInput, 10);
-    const isCorrect = parsedInput === currentQuestion.answer;
+    const isCorrect = parseInt(userInput, 10) === currentQuestion.answer;
 
     if (isCorrect) {
       playCorrect();
@@ -103,37 +116,31 @@ export default function SelectiveGamePage() {
       setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
     }
 
+    // ✅ SORU GEÇİŞ MANTIĞI: Önce sağa kayar, sonra index değişir.
     setTimeout(() => {
       if (currentIndex + 1 < questions.length) {
-        setCurrentIndex(prev => prev + 1);
-        setUserInput('');
-        setStatus('idle');
+        setIsExiting(true); 
+        setTimeout(() => {
+          setCurrentIndex(prev => prev + 1);
+          setUserInput('');
+          setStatus('idle');
+          setIsExiting(false);
+        }, 300); // Kayma süresi
       } else {
         const finalCorrect = isCorrect ? results.correct + 1 : results.correct;
         const finalWrong = !isCorrect ? results.wrong + 1 : results.wrong;
         navigate('/secimli-sonuc', { state: { correct: finalCorrect, wrong: finalWrong } });
       }
-    }, 1000);
+    }, 700); // Doğru/Yanlış bekleme süresi
   };
-
-  if (questions.length === 0) return <div className="flex items-center justify-center h-full font-poppins text-tema-yazi">Yükleniyor...</div>;
-
-  const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
-
-  // Tuş takımını basit bir diziye indirdik
-  const numpadKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'del', '0', 'check'];
 
   return (
     <div className="w-full h-full relative flex flex-col items-center pb-10 overflow-hidden">
       <style>{gameAnimations}</style>
       
-      <WaveHeader 
-        title={<>SEÇİMLİ<br/>TEST</>} 
-        aspect="aspect-[375/220]" 
-        titleTop="25%" 
-        containerClassName="animate-[titleSlideUp_0.6s_ease-out_forwards]"
-      >
-        <div className="w-[89.33%] max-w-83.75 flex flex-col animate-[fadeInProgress_0.5s_ease-out_0.4s_forwards] opacity-0">
+      {/* İLERLEME ÇUBUĞUNU IŞINLIYORUZ (PORTAL) */}
+      {portalTarget && createPortal(
+        <div className="w-[89.33%] max-w-83.75 flex flex-col animate-[fadeInProgress_0.5s_ease-out_forwards]">
           <div className="flex justify-end w-full mb-1">
             <span className="text-tema-enak font-poppins font-extrabold text-[13px] leading-none">
               {currentIndex + 1} / {questions.length}
@@ -145,17 +152,22 @@ export default function SelectiveGamePage() {
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-        </div>
-      </WaveHeader>
+        </div>,
+        portalTarget 
+      )}
 
-      {/* Ana İçerik Kapsayıcısı - max-w-[335px] ile Figma'daki maksimum genişliği kilitliyoruz */}
+      {/* Ana İçerik Kapsayıcısı */}
       <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-4">
 
         {/* --- SORU ALANI --- */}
         <div 
           key={currentIndex}
           className="relative w-full h-24 bg-tema-kutu rounded-[20px] shadow-sm mb-2 flex items-center px-4"
-          style={{ animation: 'slideInQuestion 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}
+          style={{ 
+            animation: isExiting 
+              ? 'slideOutRight 0.3s ease-in forwards' 
+              : 'slideInLeft 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' 
+          }}
         >
           {/* Soru Kutuları İçin 3 Sütunlu Grid */}
           <div className="w-full grid grid-cols-3 gap-x-9">
@@ -186,7 +198,7 @@ export default function SelectiveGamePage() {
             </div>
           </div>
 
-          {/* x ve = Operatörleri (Grid boşluklarının tam ortasına yerleştirildi) */}
+          {/* x ve = Operatörleri */}
           <div className="absolute left-[33.33%] top-1/2 -translate-x-1/2 -translate-y-1/2">
             <span className="font-poppins font-extrabold text-[32px] text-tema-yazi">×</span>
           </div>
@@ -196,8 +208,6 @@ export default function SelectiveGamePage() {
         </div>
 
         {/* --- NUMPAD ALANI --- */}
-        {/* Soru alanı ile BİREBİR AYNI px-[16px] padding ve gap-x-[36px] boşluk değerini kullanıyoruz. */}
-        {/* Bu sayede tuşlar, üstteki kutularla jilet gibi hizalanacak. */}
         <div className="w-full grid grid-cols-3 gap-x-9 gap-y-4 px-4 mt-8">
           {numpadKeys.map((key) => (
             <button
@@ -211,7 +221,10 @@ export default function SelectiveGamePage() {
                 ${key === 'check' ? (userInput === '' ? 'bg-gray-300 opacity-50' : 'bg-tema-buton2') : 'bg-tema-kutu'}`}
             >
               {key === 'del' ? (
-                <Delete size={32} strokeWidth={3} className="text-tema-yazi" />
+                // YENİ ÖZEL SVG İKONU BURADA EKLENDİ (fillRule ve clipRule React formatına uyarlandı)
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-tema-yazi">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M3.52186 25.5567C2.73194 24.3667 2.31061 22.9701 2.31061 21.5417C2.31061 20.1134 2.73194 18.7168 3.52186 17.5267C6.48269 13.0607 10.0366 9.70937 12.0982 7.95396C13.4292 6.82004 15.0847 6.25171 16.7613 6.18387C19.1015 6.08854 23.0964 5.95837 27.5 5.95837C30.6561 5.95837 33.7004 6.02529 36.0837 6.09771C39.5304 6.20312 42.3244 8.89537 42.46 12.3732C42.5743 15.428 42.6293 18.4848 42.625 21.5417C42.625 25.3532 42.5489 28.4259 42.46 30.7102C42.3244 34.188 39.5304 36.8794 36.0837 36.9857C33.7004 37.059 30.6561 37.125 27.5 37.125C23.0964 37.125 19.1015 36.9949 16.7613 36.8995C15.0847 36.8317 13.4292 36.2625 12.0982 35.1295C10.0366 33.3731 6.48361 30.0236 3.52186 25.5567ZM34.2669 18.36C34.881 17.6963 35.0552 16.7631 34.5052 16.0445C34.2751 15.742 33.9735 15.3918 33.5839 15.0022C33.2572 14.6722 32.909 14.3641 32.5417 14.08C31.823 13.531 30.8899 13.7051 30.2262 14.3193C28.9964 15.4665 27.7835 16.6317 26.5879 17.8145C25.3931 16.6325 24.1808 15.4682 22.9515 14.322C22.2879 13.707 21.3547 13.5328 20.636 14.0819C20.3335 14.3129 19.9843 14.6135 19.5938 15.0031C19.2042 15.3936 18.9035 15.7438 18.6725 16.0454C18.1225 16.764 18.2967 17.6972 18.9118 18.3609C20.0583 19.5902 21.2229 20.8024 22.4052 21.9973C20.6929 23.739 19.5883 24.9031 18.9063 25.6392C18.2921 26.3029 18.1179 27.236 18.6679 27.9547C18.898 28.2572 19.1987 28.6074 19.5892 28.997C19.9797 29.3865 20.3289 29.6881 20.6305 29.9182C21.3501 30.4682 22.2824 30.294 22.946 29.6799C23.683 28.9979 24.8472 27.8924 26.5879 26.18C28.3296 27.8942 29.4947 28.9988 30.2317 29.6808C30.8954 30.295 31.8285 30.4691 32.5472 29.92C32.8497 29.689 33.1989 29.3884 33.5894 28.9988C33.979 28.6083 34.2797 28.2581 34.5107 27.9565C35.0607 27.2379 34.8865 26.3047 34.2714 25.641C33.5894 24.905 32.4839 23.739 30.7707 21.9973C31.9536 20.8021 33.1197 19.5895 34.2669 18.36Z" fill="currentColor"/>
+                </svg>
               ) : key === 'check' ? (
                 <Check size={40} strokeWidth={4} className={userInput === '' ? 'text-gray-500' : 'text-tema-enak'} />
               ) : (

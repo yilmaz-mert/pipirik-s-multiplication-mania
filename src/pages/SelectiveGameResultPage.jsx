@@ -37,13 +37,6 @@ export default function SelectiveGameResultPage() {
     <div className="w-full h-full relative flex flex-col items-center overflow-x-hidden overflow-y-auto pb-10">
       <style>{customAnimations}</style>
 
-      {/* 1. Wave Header (Oyun ve Test sayfasındaki ile aynı oran: 375/200) */}
-      <WaveHeader 
-        title={<>SEÇİMLİ<br/>TEST</>} 
-        aspect="aspect-[375/200]" 
-        titleTop="35%"
-      />
-
       {/* 2. Ana İçerik Kapsayıcısı (Yine 375px'e sabitlendi) */}
       <div className="relative z-20 w-full max-w-93.75 flex flex-col items-center mt-16">
         
