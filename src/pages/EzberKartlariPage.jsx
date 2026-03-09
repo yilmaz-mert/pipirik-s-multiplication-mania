@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
+import SnakeDecorator from "../components/SnakeDecorator";
 
 export default function EzberKartlariPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,24 +16,26 @@ export default function EzberKartlariPage() {
     { val: 8, label: 'SEKİZLER' }, { val: 9, label: 'DOKUZLAR' },
   ];
 
-  // Container animasyonu (çocukları tetikler)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      transition: { staggerChildren: 0.05 } // Satırlar sırayla gelecek
+      transition: { staggerChildren: 0.05 } 
     },
     exit: { opacity: 0, x: -20 }
   };
 
-  // Tekil satır/buton animasyonu
   const itemVariants = {
     hidden: { x: 20, opacity: 0 },
     visible: { x: 0, opacity: 1 }
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center">
+    <div className="relative w-full h-full flex flex-col items-center bg-tema-arka-plan overflow-hidden">
+      
+      {/* 1. YILAN KATMANI: Sadece tablo göründüğünde aktif olur */}
+      <SnakeDecorator selectedNumber={selectedNumber} />
+
       <div className="relative z-10 w-full flex flex-col items-center" style={{ paddingTop: '15%' }}>
         <AnimatePresence mode="wait">
           {isDropdownOpen ? (
@@ -49,6 +53,7 @@ export default function EzberKartlariPage() {
                   key={num.val}
                   variants={itemVariants}
                   onClick={() => setSearchParams({ sayi: num.val })}
+                  // Tüm butonlar font-bold olarak kalıyor
                   className={`w-full bg-tema-kutu text-tema-yazi font-poppins font-bold uppercase text-[5.4vw] min-[512px]:text-[24px] leading-none text-center shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)] active:scale-95 flex items-center justify-center
                     ${idx === 0 ? 'h-[5vh] rounded-t-[9px]' : 'h-[4.2vh]'}
                     ${idx === numbers.length - 1 ? 'rounded-b-[9px]' : ''}
