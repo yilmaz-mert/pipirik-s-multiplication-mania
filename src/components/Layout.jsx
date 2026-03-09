@@ -15,6 +15,8 @@ const getHeaderConfig = (pathname) => {
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' };
     case '/secimli-sonuc':
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
+    case '/ezber':
+      return { title: 'EZBER\nKARTLARI', showIcons: true, aspectRatio: '375 / 220', titleTop: '35%' };
     default:
       return { title: 'PİPİRİK', showIcons: true, aspectRatio: '375 / 210', titleTop: '35%' };
   }
@@ -30,16 +32,18 @@ export default function Layout({ children }) {
       <div className="w-full max-w-lg h-dvh relative flex flex-col overflow-x-hidden">
 
           {/* 1. WAVE HEADER BURAYA GELDİ (headerConfig artık kullanılıyor) */}
-          <WaveHeader 
-            title={headerConfig.title}
-            showIcons={headerConfig.showIcons}
-            aspectRatio={headerConfig.aspectRatio}
-            titleTop={headerConfig.titleTop}
-          />
+          <div className="relative z-0"> 
+            <WaveHeader 
+              title={headerConfig.title}
+              showIcons={headerConfig.showIcons}
+              aspectRatio={headerConfig.aspectRatio}
+              titleTop={headerConfig.titleTop}
+            />
+          </div>
 
                 {!isHomePage && (
           <div 
-            className="absolute z-0 pointer-events-none opacity-100"
+            className="absolute z-[-1] pointer-events-none opacity-100"
             style={{ 
               width: '117.6%', 
               left: '-6.4%', 

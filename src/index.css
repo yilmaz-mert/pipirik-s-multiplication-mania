@@ -1,5 +1,5 @@
 /* Bu satırları CSS dosyanın en başına ekleyebilirsin */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Poppins:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&family=Poppins:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
