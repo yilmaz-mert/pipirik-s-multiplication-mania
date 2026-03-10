@@ -53,7 +53,7 @@ export default function Layout({ children }) {
 
                 {!isHomePage && (
           <div 
-            className="absolute z-[-1] pointer-events-none opacity-100"
+            className="absolute z-[-1] pointer-events-none opacity-100 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
             style={{ 
               width: '117.6%', 
               left: '-6.4%', 
