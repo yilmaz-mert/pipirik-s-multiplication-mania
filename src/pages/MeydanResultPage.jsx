@@ -114,7 +114,7 @@ export default function MeydanResultPage() {
 
                       {/* DOĞRU SÜTUNU */}
                       <div className="flex flex-col justify-center items-center h-full">
-                        <span className="font-poppins font-bold text-[min(3vw,12px)] text-tema-yazi uppercase mb-3 leading-none">
+                        <span className="font-poppins font-bold text-[min(5vw,20px)] text-tema-yazi uppercase mb-3 leading-none">
                           {idx + 1}.SIRA
                         </span>
                         {isCurrentResult ? (

@@ -62,7 +62,9 @@ export default function MeydanPage() {
                 >
                   {record ? (
                     <>
-                      <span className={rowTextStyle}>{record.time}</span>
+                      <span className="text-center font-poppins font-medium text-[min(5vw,20px)] text-tema-yazi uppercase leading-[150%] tracking-[0.05em]">
+                        {record.time}
+                      </span>
                       <span className={rowTextStyle}>{record.correct}</span>
                       <span className={rowTextStyle}>{record.wrong}</span>
                     </>
