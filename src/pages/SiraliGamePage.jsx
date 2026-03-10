@@ -25,7 +25,7 @@ export default function SiraliGamePage() {
       const sortedTables = [...tables].sort((a, b) => a - b);
       
       sortedTables.forEach(table => {
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 5; i++) {
           newQuestions.push({ num1: table, num2: i, answer: table * i });
         }
       });

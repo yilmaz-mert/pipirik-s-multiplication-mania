@@ -86,42 +86,33 @@ export default function MeydanResultPage() {
               return (
                 <div 
                   key={idx} 
-                  className={`grid grid-cols-3 w-full items-center border-b border-black/5 last:border-0 h-auto py-[0.5vh] ${
-                    (!showExtraRow && idx === 2) ? 'rounded-b-[9px]' : ''
+                  className={`grid grid-cols-3 w-full items-center border-b border-black/5 last:border-0 py-[0.5vh] ${
+                    showExtraRow ? 'h-auto' : 'flex-1'
                   }`}
                   style={{ backgroundColor: rowBg }}
                 >
                   {record ? (
                     <>
-                      {/* SÜRE SÜTUNU */}
+                      {/* 1. SÜTUN: SÜRE */}
                       <div className="flex flex-col justify-center items-center h-full">
-                        <div className="h-[min(3vw,12px)] mb-3" /> 
+                        {/* DÜZELTME: h-[min(3vw,12px)] olan yer SIRA yazısıyla aynı boyuta (18px) çekildi */}
+                        <div className="h-[min(4.5vw,18px)] mb-3" /> 
                         {isCurrentResult ? (
-                          <div 
-                            className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm"
-                            style={{ backgroundColor: bubbleBg }}
-                          >
-                            <span className="font-poppins font-medium text-[min(4vw,18px)] text-tema-yazi uppercase">
-                              {record.time}
-                            </span>
+                          <div className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: bubbleBg }}>
+                            <span className="font-poppins font-medium text-[min(4vw,18px)] text-tema-yazi uppercase">{record.time}</span>
                           </div>
                         ) : (
-                          <span className="text-center font-poppins font-medium text-[min(5vw,20px)] text-tema-yazi uppercase leading-[150%] tracking-[0.05em]">
-                            {record.time}
-                          </span>
+                          <span className="text-center font-poppins font-medium text-[min(5vw,20px)] text-tema-yazi uppercase leading-[150%] tracking-[0.05em]">{record.time}</span>
                         )}
                       </div>
 
-                      {/* DOĞRU SÜTUNU */}
+                      {/* 2. SÜTUN: DOĞRU (SIRA YAZISI BURADA) */}
                       <div className="flex flex-col justify-center items-center h-full">
                         <span className="font-poppins font-bold text-[min(5vw,20px)] text-tema-yazi uppercase mb-3 leading-none">
                           {idx + 1}.SIRA
                         </span>
                         {isCurrentResult ? (
-                          <div 
-                            className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm"
-                            style={{ backgroundColor: bubbleBg }}
-                          >
+                          <div className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: bubbleBg }}>
                             <span className={rowTextStyle}>{record.correct}</span>
                           </div>
                         ) : (
@@ -129,14 +120,12 @@ export default function MeydanResultPage() {
                         )}
                       </div>
 
-                      {/* YANLIŞ SÜTUNU */}
+                      {/* 3. SÜTUN: YANLIŞ */}
                       <div className="flex flex-col justify-center items-center h-full">
-                        <div className="h-[min(3vw,12px)] mb-3" />
+                        {/* DÜZELTME: h-[min(3vw,12px)] olan yer SIRA yazısıyla aynı boyuta (18px) çekildi */}
+                        <div className="h-[min(4.5vw,18px)] mb-3" />
                         {isCurrentResult ? (
-                          <div 
-                            className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm"
-                            style={{ backgroundColor: bubbleBg }}
-                          >
+                          <div className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: bubbleBg }}>
                             <span className={rowTextStyle}>{record.wrong}</span>
                           </div>
                         ) : (
