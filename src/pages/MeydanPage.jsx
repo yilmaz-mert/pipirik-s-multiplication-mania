@@ -11,7 +11,7 @@ export default function MeydanPage() {
   const displayRecords = records.slice(0, 3);
   
   // YAZI STİLLERİ GÜNCELLENDİ: px yerine min(vw, px) kullanarak esnek hale getirildi
-  const headerTextStyle = "text-center font-poppins font-black text-[min(4vw,16px)] text-tema-yazi uppercase leading-[150%] tracking-[0.15em]";
+  const headerTextStyle = "text-center font-poppins font-extrabold text-[min(5vw,20px)] text-tema-yazi uppercase leading-[150%] tracking-[0.15em]";
   const rowTextStyle = "text-center font-poppins font-extrabold text-[min(5vw,20px)] text-tema-yazi uppercase leading-[150%] tracking-[0.05em]";
 
   return (
@@ -26,7 +26,7 @@ export default function MeydanPage() {
           className="bg-tema-kutu rounded-t-[9px] flex items-center justify-center z-10 w-[33.6%] aspect-126/27 -mb-px"
         >
           {/* Yazı boyutu esnek yapıldı */}
-          <span className="font-poppins font-black text-[min(4.5vw,20px)] leading-[150%] tracking-[0.21em] text-tema-yazi">
+          <span className="font-poppins font-black text-[min(5vw,20px)] leading-[150%] tracking-[0.21em] text-tema-yazi">
             REKOR
           </span>
         </div>

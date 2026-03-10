@@ -15,6 +15,23 @@ export const useGameStore = create(
       wrongInARow: 0, // Her 3 yanlışta ceza puanı tetiklemek için
       records: [], // { time: '09:48', correct: 19, wrong: 1 } 
 
+      addRecord: (newRecord) => {
+        const { records } = get();
+        
+        // Yeni rekoru mevcut listeye ekle
+        const updatedRecords = [...records, newRecord];
+
+        // Sıralama mantığı: En çok doğru, sonra en az yanlış, sonra en hızlı süre
+        updatedRecords.sort((a, b) => {
+          if (b.correct !== a.correct) return b.correct - a.correct;
+          if (a.wrong !== b.wrong) return a.wrong - b.wrong;
+          return a.timeSeconds - b.timeSeconds;
+        });
+
+        // Güncellenmiş listeyi kaydet
+        set({ records: updatedRecords });
+      },
+
       // --- AKSİYONLAR ---
       setMode: (mode) => set({ activeMode: mode, score: { correct: 0, wrong: 0 }, progress: 1 }),
       
