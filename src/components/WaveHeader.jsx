@@ -7,7 +7,7 @@ export default function WaveHeader({
   title, 
   titleTop = '42%', 
   showIcons = true, 
-  aspectRatio = "375 / 275", // Artık class değil, direkt CSS özelliği kullanıyoruz
+  aspectRatio = "375 / 275", 
 }) {
   const navigate = useNavigate();
 
@@ -33,17 +33,27 @@ export default function WaveHeader({
         style={{ top: titleTop }}
       >
         {title && (
-          // whitespace-pre-wrap sayesinde "\n" karakterini görünce otomatik alt satıra geçer (br etiketine gerek kalmaz)
           <h1 className="font-outfit font-extrabold text-[7.5vw] min-[512px]:text-[38.4px] text-tema-enak drop-shadow-lg text-center leading-tight px-4 whitespace-pre-wrap transition-all duration-300">
             {title}
           </h1>
         )}
         
-        {/* HARİKA DOKUNUŞ: Sayfaların dinamik içerik fırlatması için Hedef Portal */}
         <div id="wave-header-portal-target" className="w-full flex justify-center"></div>
       </div>
 
-      {/* 3. İkonlar */}
+      {/* 3. Soru Sayacı*/}
+      <div 
+        id="wave-header-counter-target" 
+        className="absolute z-20"
+        style={{ 
+          left: '10.66%',
+          top: '68.7%',   
+          width: '14.93%', 
+          height: '15.27%'
+        }}
+      ></div>
+
+      {/* 4. İkonlar */}
       {showIcons && (
         <div className="absolute top-[10%] w-full px-6 flex justify-between items-center z-50">
           <button onClick={() => navigate(-1)} className="text-[#1D324F] active:scale-90 transition-transform p-2 cursor-pointer">

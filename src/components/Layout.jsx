@@ -24,7 +24,7 @@ const getHeaderConfig = (pathname) => {
     case '/meydan':
       return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' };  
     case '/meydan-oyun':
-      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' }; 
+      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' }; 
     case '/meydan-sonuc':
       return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' }; 
     default:
