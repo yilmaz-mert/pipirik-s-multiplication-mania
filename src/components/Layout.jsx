@@ -21,6 +21,12 @@ const getHeaderConfig = (pathname) => {
       return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' };
     case '/sirali-oyun':
       return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' };
+    case '/meydan':
+      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' };  
+    case '/meydan-oyun':
+      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' }; 
+    case '/meydan-sonuc':
+      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' }; 
     default:
       return { title: 'PİPİRİK', showIcons: true, aspectRatio: '375 / 210', titleTop: '35%' };
   }
