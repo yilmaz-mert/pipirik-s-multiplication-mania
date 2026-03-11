@@ -14,7 +14,7 @@ export default function SelectiveGamePage() {
     const tables = location.state?.selected || ['mix'];
     
     if (tables.includes('mix')) {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 20; i++) {
         const num1 = Math.floor(Math.random() * 8) + 2; 
         const num2 = Math.floor(Math.random() * 8) + 2;
         newQuestions.push({ num1, num2, answer: num1 * num2 });
