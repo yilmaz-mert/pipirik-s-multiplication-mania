@@ -8,30 +8,38 @@ export default function SelectiveGamePage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 1. STATE TANIMLAMALARI
   const [questions] = useState(() => {
-    let newQuestions = [];
-    const tables = location.state?.selected || ['mix'];
-    
-    if (tables.includes('mix')) {
-      for (let i = 0; i < 20; i++) {
-        const num1 = Math.floor(Math.random() * 8) + 2; 
-        const num2 = Math.floor(Math.random() * 8) + 2;
-        newQuestions.push({ num1, num2, answer: num1 * num2 });
-      }
-    } else {
-      tables.forEach(table => {
-        let tableQuestions = [];
-        for (let i = 1; i <= 10; i++) {
-          tableQuestions.push({ num1: table, num2: i, answer: table * i });
+      let newQuestions = [];
+      const tables = location.state?.selected || ['mix'];
+      
+      if (tables.includes('mix')) {
+        let allQuestions = [];
+        for (let i = 2; i <= 9; i++) {
+          for (let j = 2; j <= 9; j++) {
+            allQuestions.push({ num1: i, num2: j, answer: i * j });
+          }
         }
-        tableQuestions = tableQuestions.sort(() => Math.random() - 0.5);
-        newQuestions = [...newQuestions, ...tableQuestions];
-      });
-      newQuestions = newQuestions.sort(() => Math.random() - 0.5);
-    }
-    return newQuestions;
-  });
+        
+        for (let i = allQuestions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+        }
+        newQuestions = allQuestions.slice(0, 20);
+        
+      } else {
+        tables.forEach(table => {
+          for (let i = 1; i <= 10; i++) {
+            newQuestions.push({ num1: table, num2: i, answer: table * i });
+          }
+        });
+        
+        for (let i = newQuestions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newQuestions[i], newQuestions[j]] = [newQuestions[j], newQuestions[i]];
+        }
+      }
+      return newQuestions;
+    });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
@@ -39,8 +47,6 @@ export default function SelectiveGamePage() {
   const [results, setResults] = useState({ correct: 0, wrong: 0 });
   const [isExiting, setIsExiting] = useState(false);
 
-  // ✅ PROGRESS BAR ÇÖZÜMÜ: Portal hedefini useEffect ile yakalıyoruz.
-  // ESLint hatasını önlemek için microtask (Promise) kullanıyoruz.
   const [portalTarget, setPortalTarget] = useState(null);
   useEffect(() => {
     const target = document.getElementById('wave-header-portal-target');
@@ -49,7 +55,6 @@ export default function SelectiveGamePage() {
     }
   }, []); 
 
-  // Ses Hook'ları
   const [playClick] = useSound('/sounds/click.ogg', { volume: 0.5 });
   const [playCorrect] = useSound('/sounds/correct.ogg');
   const [playWrong] = useSound('/sounds/wrong.ogg');
@@ -60,7 +65,6 @@ export default function SelectiveGamePage() {
   const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
   const numpadKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'del', '0', 'check'];
 
-  // ✅ GELİŞTİRİLMİŞ ANİMASYONLAR
   const gameAnimations = `
     @keyframes slideInQuestion {
       0% { opacity: 0; transform: translateX(-100%) scale(0.9); }
@@ -116,7 +120,6 @@ export default function SelectiveGamePage() {
       setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
     }
 
-    // ✅ SORU GEÇİŞ MANTIĞI: Önce sağa kayar, sonra index değişir.
     setTimeout(() => {
       if (currentIndex + 1 < questions.length) {
         setIsExiting(true); 
@@ -125,13 +128,13 @@ export default function SelectiveGamePage() {
           setUserInput('');
           setStatus('idle');
           setIsExiting(false);
-        }, 300); // Kayma süresi
+        }, 300);
       } else {
         const finalCorrect = isCorrect ? results.correct + 1 : results.correct;
         const finalWrong = !isCorrect ? results.wrong + 1 : results.wrong;
         navigate('/secimli-sonuc', { state: { correct: finalCorrect, wrong: finalWrong } });
       }
-    }, 700); // Doğru/Yanlış bekleme süresi
+    }, 700); 
   };
 
   return (

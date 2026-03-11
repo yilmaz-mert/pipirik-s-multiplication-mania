@@ -15,14 +15,21 @@ export default function MeydanGamePage() {
   }, [setMode, resetGame]);
 
   const [questions] = useState(() => {
-    let newQuestions = [];
-    for (let i = 0; i < 20; i++) {
-      const num1 = Math.floor(Math.random() * 8) + 2; 
-      const num2 = Math.floor(Math.random() * 8) + 2;
-      newQuestions.push({ num1, num2, answer: num1 * num2 });
-    }
-    return newQuestions;
-  });
+      let allQuestions = [];
+      
+      for (let i = 2; i <= 9; i++) {
+        for (let j = 2; j <= 9; j++) {
+          allQuestions.push({ num1: i, num2: j, answer: i * j });
+        }
+      }
+
+      for (let i = allQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+      }
+
+      return allQuestions.slice(0, 20);
+    });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
