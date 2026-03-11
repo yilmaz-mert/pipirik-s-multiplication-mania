@@ -4,6 +4,34 @@ import { useNavigate } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import useSound from 'use-sound';
 import { useGameStore } from '../store/useGameStore';
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from 'framer-motion';
+
+// --- YAPRAK ÇEVİRME (FLIP) BİLEŞENİ ---
+const FlipNumber = ({ value }) => {
+  return (
+    <div className="relative flex items-center justify-center w-full h-full perspective-[1000px]">
+      <AnimatePresence mode="popLayout">
+        <motion.div
+          key={value}
+          initial={{ rotateX: -90, y: "-50%", opacity: 0 }}
+          animate={{ rotateX: 0, y: "0%", opacity: 1 }}
+          exit={{ rotateX: 90, y: "50%", opacity: 0 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 150, 
+            damping: 15,
+            duration: 0.4 
+          }}
+          style={{ transformOrigin: "center center" }}
+          className="absolute flex items-center justify-center w-full h-full"
+        >
+          {value}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export default function MeydanGamePage() {
   const navigate = useNavigate();
@@ -34,7 +62,6 @@ export default function MeydanGamePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [status, setStatus] = useState('idle'); 
-  const [isExiting, setIsExiting] = useState(false);
   const [localTimer, setLocalTimer] = useState(0);
   const [showPenalty, setShowPenalty] = useState(false);
   const [results, setResults] = useState({ correct: 0, wrong: 0 });
@@ -78,12 +105,6 @@ export default function MeydanGamePage() {
   const currentQuestion = questions[currentIndex];
   const numpadKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'del', '0', 'check'];
 
-  const gameAnimations = `
-    @keyframes slideInQuestion { 0% { opacity: 0; transform: translateX(-100%) scale(0.9); } 70% { transform: translateX(5%) scale(1.02); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
-    @keyframes slideOutQuestion { 0% { opacity: 1; transform: translateX(0) scale(1); } 100% { opacity: 0; transform: translateX(100%) scale(0.9); } }
-    @keyframes penaltyFade { 0% { opacity: 0; transform: translateY(10px); color: #721C24; } 20% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
-  `;
-
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
@@ -109,6 +130,7 @@ export default function MeydanGamePage() {
     const isCorrect = parseInt(userInput, 10) === currentQuestion.answer;
 
     if (isCorrect) {
+      // Doğru cevap mantığı aynı kalıyor
       useGameStore.setState({ currentQuestion }); 
       handleAnswer(userInput);
       playCorrect();
@@ -117,43 +139,38 @@ export default function MeydanGamePage() {
 
       setTimeout(() => {
         if (currentIndex + 1 < questions.length) {
-          setIsExiting(true); 
-          setTimeout(() => {
-            setCurrentIndex(prev => prev + 1);
-            setUserInput('');
-            setStatus('idle');
-            setMistakes(0);
-            setWrongGuesses([]);
-            setIsExiting(false);
-          }, 300);
+          setCurrentIndex(prev => prev + 1);
+          setUserInput('');
+          setStatus('idle');
+          setMistakes(0);
+          setWrongGuesses([]);
         } else {
           navigate('/meydan-sonuc', { state: { time: localTimer, correct: results.correct + 1, wrong: results.wrong } });
         }
       }, 700);
 
     } else {
+      // YANLIŞ CEVAP DURUMU
       playWrong();
       setStatus('wrong');
       const newMistakes = mistakes + 1;
       setMistakes(newMistakes);
       setWrongGuesses(prev => [...prev, userInput]);
 
-      if (newMistakes >= 3) {
-        setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
-        useGameStore.setState({ currentQuestion });
-        handleAnswer(userInput); 
+      // --- KRİTİK DEĞİŞİKLİK: Her yanlışta Store'u bilgilendir ---
+      handleAnswer(userInput); 
 
+      if (newMistakes >= 3) {
+        // Soruyu tamamen kaybettiğinde toplam yanlış sonucunu artır
+        setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
+        
         setTimeout(() => {
           if (currentIndex + 1 < questions.length) {
-            setIsExiting(true); 
-            setTimeout(() => {
-              setCurrentIndex(prev => prev + 1);
-              setUserInput('');
-              setStatus('idle');
-              setMistakes(0);
-              setWrongGuesses([]);
-              setIsExiting(false);
-            }, 300);
+            setCurrentIndex(prev => prev + 1);
+            setUserInput('');
+            setStatus('idle');
+            setMistakes(0);
+            setWrongGuesses([]);
           } else {
             navigate('/meydan-sonuc', { state: { time: localTimer, correct: results.correct, wrong: results.wrong + 1 } });
           }
@@ -168,8 +185,7 @@ export default function MeydanGamePage() {
   };
 
   return (
-    <div className="w-full h-full relative flex flex-col items-center pb-10 overflow-hidden">
-      <style>{gameAnimations}</style>
+    <div className="w-full h-full relative flex flex-col items-center pb-10">
       
       {counterPortal && createPortal(
         <div className="relative w-full h-full font-poppins font-extrabold" style={{ color: '#F5E4C3' }}>
@@ -184,37 +200,68 @@ export default function MeydanGamePage() {
         
         {/* TIMER */}
         <div className="relative flex flex-col items-center">
-          <div className="bg-tema-kutu flex items-center justify-center relative z-30" style={{ width: '75px', height: '23px', borderTopLeftRadius: '5px', borderTopRightRadius: '5px' }}>
-            <span className="font-poppins font-extrabold text-[14px] text-tema-yazi tracking-widest leading-none">{formatTime(localTimer)}</span>
+          <div 
+            className="bg-tema-kutu flex items-center justify-center relative z-30 overflow-hidden font-poppins font-extrabold text-[14px] text-tema-yazi leading-none" 
+            style={{ width: '75px', height: '23px', borderTopLeftRadius: '5px', borderTopRightRadius: '5px' }}
+          >
+            {formatTime(localTimer).split('').map((char, index) => (
+              char === ':' ? (
+                <span key="colon" className="mx-px mb-px">:</span>
+              ) : (
+                <div key={index} className="relative w-2.75 h-full flex items-center justify-center">
+                  <FlipNumber value={char} />
+                </div>
+              )
+            ))}
           </div>
-          {showPenalty && <div className="absolute -top-6 font-poppins font-extrabold text-[14px] animate-[penaltyFade_1.5s_ease-in-out_forwards] whitespace-nowrap">+10 Sn Ceza!</div>}
+
+          <AnimatePresence>
+            {showPenalty && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                // z-50 eklendi ve y ekseni biraz daha yukarı çekildi
+                className="absolute -top-7 z-50 font-poppins font-extrabold text-[14px] text-[#721C24] whitespace-nowrap drop-shadow-sm"
+              >
+                +10 Sn Ceza!
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* SORU KUTUSU */}
-        <div 
-          key={currentIndex}
-          className="relative w-full h-24 bg-tema-kutu rounded-[20px] shadow-sm flex items-center px-4"
-          style={{ animation: isExiting ? 'slideOutQuestion 0.3s ease-in forwards' : 'slideInQuestion 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}
-        >
+        {/* SORU KUTUSU - mt-2 kaldırıldı, timer ile birleşti */}
+        <div className="relative w-full h-24 bg-tema-kutu rounded-[20px] shadow-sm flex items-center px-4">
           <div className="w-full grid grid-cols-3 gap-x-9">
-            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center">
-              <span className="font-poppins font-extrabold text-[32px] text-tema-yazi">{currentQuestion?.num1}</span>
+            
+            {/* 1. Sayı Alanı */}
+            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center overflow-hidden font-poppins font-extrabold text-[32px] text-tema-yazi">
+              <FlipNumber value={currentQuestion?.num1} />
             </div>
-            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center">
-              <span className="font-poppins font-extrabold text-[32px] text-tema-yazi">{currentQuestion?.num2}</span>
+            
+            {/* İKİnci Sayı Alanı */}
+            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center overflow-hidden font-poppins font-extrabold text-[32px] text-tema-yazi">
+              <FlipNumber value={currentQuestion?.num2} />
             </div>
+            
+            {/* ÜÇüncü Alan: Cevap */}
             <div 
-              className="relative w-full aspect-74/70 rounded-[20px] flex items-center justify-center transition-colors duration-300 shadow-inner"
-              style={{ backgroundColor: status === 'correct' ? '#D4EDDA' : status === 'wrong' ? '#F8D7DA' : 'var(--color-tema-enak)' }}
+              className="relative w-full aspect-74/70 rounded-[20px] flex items-center justify-center transition-colors duration-300 shadow-inner overflow-hidden font-poppins font-extrabold text-[32px]"
+              style={{ 
+                backgroundColor: status === 'correct' ? '#D4EDDA' : status === 'wrong' ? '#F8D7DA' : 'var(--color-tema-enak)',
+                color: status === 'correct' ? '#155724' : status === 'wrong' ? '#721C24' : 'var(--color-tema-yazi)'
+              }}
             >
-              <span className="font-poppins font-extrabold text-[32px]" style={{ color: status === 'correct' ? '#155724' : status === 'wrong' ? '#721C24' : 'var(--color-tema-yazi)' }}>{userInput}</span>
+              <FlipNumber value={userInput !== '' ? userInput : ' '} />
             </div>
+            
           </div>
+          
           <div className="absolute left-[33.33%] top-1/2 -translate-x-1/2 -translate-y-1/2"><span className="font-poppins font-extrabold text-[32px] text-tema-yazi">×</span></div>
           <div className="absolute left-[66.66%] top-1/2 -translate-x-1/2 -translate-y-1/2"><span className="font-poppins font-extrabold text-[32px] text-tema-yazi">=</span></div>
         </div>
 
-        {/* YANLIŞ TAHMİNLER (Artık Akışın İçinde / Flow) */}
+        {/* YANLIŞ TAHMİNLER */}
         <div className="w-full grid grid-cols-3 gap-x-9 px-4 h-5 mt-2">
           <div className="col-start-3 flex justify-center gap-1">
             {wrongGuesses.map((guess, idx) => (

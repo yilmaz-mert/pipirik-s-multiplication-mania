@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/useGameStore';
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MeydanResultPage() {
   const location = useLocation();
@@ -29,7 +31,6 @@ export default function MeydanResultPage() {
     }
   }, [addRecord, correct, wrong, time, currentTimeStr]);
   
-
   const rankIndex = records.findIndex(
     (r) => r.time === currentTimeStr && r.correct === correct && r.wrong === wrong
   );
@@ -57,13 +58,11 @@ export default function MeydanResultPage() {
 
         {/* REKOR Gövde */}
         <div 
-          className={`w-full bg-tema-kutu rounded-[9px] flex flex-col items-center pt-[2.4%] px-[2.4%] pb-[3%] shadow-sm transition-all duration-300 ${
-            showExtraRow ? 'h-auto' : 'aspect-335/224'
-          }`}
+          className={`w-full bg-tema-kutu rounded-[9px] flex flex-col items-center pt-[2.4%] px-[2.4%] pb-[4%] shadow-sm transition-all duration-300 h-auto min-h-56`}
         >
-          
+                  
           {/* SÜRE-DOĞRU-YANLIŞ */}
-          <div className={`flex w-full items-center rounded-t-[9px] gap-[5.01%] ${showExtraRow ? 'h-[min(11vw,44px)]' : 'h-[17.13%]'}`}>
+          <div className="flex w-full items-center rounded-t-[9px] gap-[5.01%] h-11">
             <div className={`flex-1 h-full flex items-center justify-center bg-tema-secili/20 rounded-t-[9px] ${headerTextStyle}`}>
                 Süre
             </div>
