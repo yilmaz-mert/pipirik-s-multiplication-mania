@@ -1,125 +1,295 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function SelectiveGameResultPage() {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   
-  const { correct = 0, wrong = 0 } = location.state || {};
+  const { correct = 0, wrong = 0, answers = [] } = location.state || {};
 
-  const customAnimations = `
-    @keyframes revealLine {
-      0% { clip-path: polygon(0 0, 0 0, 0 0); opacity: 0; }
-      1% { opacity: 1; }
-      100% { clip-path: polygon(0 0, 200% 0, 0 200%); opacity: 1; }
+  const total = correct + wrong;
+  const successRate = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  // SADECE YANLIŞ CEVAPLARI FİLTRELE
+  const wrongAnswers = answers.filter(ans => !ans.isCorrect);
+
+  // --- REFERANSLAR ---
+  const listRef = useRef(null);
+  const thumbRef = useRef(null);
+  const channelRef = useRef(null);
+  
+  // Sürükleme (Drag) Durum Yönetimi
+  const isDragging = useRef(false);
+  const startY = useRef(0);
+  const startScrollTop = useRef(0);
+
+  // 1. LİSTE KAYDIKÇA KAPSÜLÜ HAREKET ETTİREN FONKSİYON
+  const updateThumbPosition = () => {
+    if (!listRef.current || !thumbRef.current || !channelRef.current) return;
+
+    const list = listRef.current;
+    const thumb = thumbRef.current;
+    const channel = channelRef.current;
+
+    const maxScrollTop = list.scrollHeight - list.clientHeight;
+    
+    if (maxScrollTop <= 0) {
+      thumb.style.display = 'none';
+      return;
+    } else {
+      thumb.style.display = 'block';
     }
-    @keyframes slideDownCorrect {
-      0% { opacity: 0; transform: translateY(-50px); }
-      100% { opacity: 1; transform: translateY(0); }
+
+    const percentage = list.scrollTop / maxScrollTop;
+    const channelHeight = channel.getBoundingClientRect().height;
+    const thumbHeight = thumb.getBoundingClientRect().height;
+    
+    const margin = 4;
+    const minTop = margin - 4; // Senin kalibre ettiğin değer
+    const maxTop = channelHeight - thumbHeight - margin;
+
+    const newTop = minTop + (percentage * (maxTop - minTop));
+    thumb.style.top = `${newTop}px`;
+  };
+
+  // 2. KAPSÜLÜ TUTUP SÜRÜKLEME MANTIĞI (POINTER EVENTS)
+  const handlePointerDown = (e) => {
+    isDragging.current = true;
+    startY.current = e.clientY;
+    startScrollTop.current = listRef.current.scrollTop;
+    
+    document.body.style.userSelect = 'none'; // Sürüklerken metin seçilmesin
+    if (thumbRef.current) thumbRef.current.style.transition = 'none'; 
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging.current) return;
+
+    const list = listRef.current;
+    const channel = channelRef.current;
+    const thumb = thumbRef.current;
+
+    const deltaY = e.clientY - startY.current;
+    const channelHeight = channel.getBoundingClientRect().height;
+    const thumbHeight = thumb.getBoundingClientRect().height;
+    const scrollHeight = list.scrollHeight - list.clientHeight;
+    
+    // Kapsülün kanaldaki hareket mesafesi ile listenin scroll mesafesi arasındaki oran
+    const scrollRatio = scrollHeight / (channelHeight - thumbHeight - 8);
+    
+    list.scrollTop = startScrollTop.current + (deltaY * scrollRatio);
+  };
+
+  const handlePointerUp = () => {
+    isDragging.current = false;
+    document.body.style.userSelect = 'auto';
+    if (thumbRef.current) thumbRef.current.style.transition = 'top 0.05s linear';
+  };
+
+  // 3. EVENT LISTENERLARIN BAĞLANMASI
+  useEffect(() => {
+    const list = listRef.current;
+    if (list) {
+      list.addEventListener('scroll', updateThumbPosition);
+      // Window üzerinden dinliyoruz ki parmak kanaldan çıksa da sürükleme kopmasın
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
+      
+      // İlk yüklemede pozisyonu hesapla
+      setTimeout(updateThumbPosition, 0);
     }
-    @keyframes slideUpWrong {
-      0% { opacity: 0; transform: translateY(50px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.3); }
-      70% { transform: scale(1.1); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes boxFadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-  `;
+
+    return () => {
+      if (list) list.removeEventListener('scroll', updateThumbPosition);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, [answers]);
 
   return (
-    <div className="w-full h-full relative flex flex-col items-center overflow-x-hidden overflow-y-auto pb-10">
-      <style>{customAnimations}</style>
-
-      {/* 2. Ana İçerik Kapsayıcısı (Yine 375px'e sabitlendi) */}
-      <div className="relative z-20 w-full max-w-93.75 flex flex-col items-center mt-16">
-        
-        {/* Ana Turuncu Kutu - %79.2 (297/375) genişlik, 297/322 oran */}
+    <div className="w-full flex-1 flex flex-col items-center py-[min(4vh,2rem)] px-6 gap-y-[min(3vh,24px)] overflow-y-auto scrollbar-hide">
+      
+      {/* Üst Alan: Doğru ve Yanlış Kutuları */}
+      <div className="w-full flex justify-center gap-[min(4vw,16px)] -mt-[1vh] shrink-0">
         <div 
-          className="relative flex flex-col items-center bg-tema-kutu w-[79.2%] aspect-297/322 rounded-[9px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-          style={{ animation: 'boxFadeIn 0.6s ease-out forwards' }}
+          className="flex items-center justify-center gap-[min(2vw,8px)] rounded-[20px] shadow-sm"
+          style={{ 
+            width: 'min(30.4vw, 114px)',
+            aspectRatio: '114 / 26.72', 
+            backgroundColor: 'var(--Tema-Mat-true, #51AE00)' 
+          }}
         >
-          {/* Sonuçlar Başlığı */}
-          <h2 className="text-tema-yazi text-center mt-[3%] font-poppins font-extrabold text-[min(8.5vw,32px)] leading-none">
-            SONUÇLAR
-          </h2>
-
-          {/* İç Kutu (Açık Krem/Sarımsı) - %88.55 (263/297) genişlik, %16.77 (54/322) üstten boşluk */}
-          <div 
-            className="absolute bg-tema-enak overflow-hidden w-[88.55%] aspect-263/250 rounded-[20px] top-[16.77%]"
-          >
-            {/* Çapraz Çizgi SVG (w-full ve h-full ile otomatik kaplatıldı) */}
-            <div 
-              className="absolute inset-0 pointer-events-none" 
-              style={{ 
-                animation: 'revealLine 1s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards',
-                opacity: 0
-              }}
-            > 
-              {/* preserveAspectRatio="none" ile kutu esnese bile çizgi köşeden köşeye gider */}
-              <svg width="100%" height="100%" viewBox="0 0 269 253" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8ZM92.5 103.5L91.0143 103.707V103.707L92.5 103.5ZM189 165.5L187.671 166.195L189 165.5ZM252.5 244.5C252.5 248.918 256.082 252.5 260.5 252.5C264.918 252.5 268.5 248.918 268.5 244.5C268.5 240.082 264.918 236.5 260.5 236.5C256.082 236.5 252.5 240.082 252.5 244.5ZM8 8L7.97857 9.49985C30.6118 9.82318 80.7217 29.6792 91.0143 103.707L92.5 103.5L93.9857 103.293C83.4783 27.7208 32.0549 6.84349 8.02143 6.50015L8 8ZM92.5 103.5L91.0143 103.707C94.2683 127.11 99.8237 139.132 107.331 144.567C114.917 150.058 124.011 148.473 133.043 146.27C142.304 144.01 151.684 141.059 160.95 142.597C170.008 144.101 179.197 149.984 187.671 166.195L189 165.5L190.329 164.805C181.553 148.016 171.68 141.337 161.441 139.637C151.409 137.972 141.258 141.177 132.332 143.355C123.176 145.589 115.427 146.724 109.091 142.137C102.676 137.493 97.2317 126.64 93.9857 103.293L92.5 103.5ZM189 165.5L187.671 166.195C215.381 219.206 247.197 241.416 260.003 245.915L260.5 244.5L260.997 243.085C249.137 238.918 217.819 217.394 190.329 164.805L189 165.5Z" fill="#130D3D"/>
-              </svg>
-            </div>
-
-            {/* Yanlış Yazısı (Sol Alt Alan) */}
-            <div 
-              className="absolute pointer-events-none w-[76%] top-[40%] left-[-22%]" 
-              style={{ animation: 'slideUpWrong 0.6s ease-out 0.6s forwards', opacity: 0 }}
-            >
-              <div className="rotate-90 font-poppins font-semibold text-[min(17vw,64px)] text-tema-yazi/10 leading-none text-center">
-                yanlış
-              </div>
-            </div>
-            
-            {/* Yanlış Sayısı */}
-            <div 
-              className="absolute pointer-events-none text-tema-yazi w-[25%] top-[58%] left-[28.5%]" 
-              style={{ animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.2s forwards', opacity: 0 }}
-            >
-              <div className="font-poppins font-black text-[min(24vw,90px)] leading-none text-center">
-                {wrong}
-              </div>
-            </div>
-
-            {/* Doğru Yazısı (Sağ Üst Alan) */}
-            <div 
-              className="absolute pointer-events-none w-[76%] top-[30%] right-[-22.8%]" 
-              style={{ animation: 'slideDownCorrect 0.6s ease-out 0.6s forwards', opacity: 0 }}
-            >
-              <div className="-rotate-90 font-poppins font-semibold text-[min(17vw,64px)] text-tema-yazi/10 leading-none text-center">
-                doğru
-              </div>
-            </div>
-
-            {/* Doğru Sayısı */}
-            <div 
-              className="absolute pointer-events-none text-tema-yazi w-[40%] top-[4%] left-[34.2%]" 
-              style={{ animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards', opacity: 0 }}
-            >
-              <div className="font-poppins font-black text-[min(24vw,90px)] leading-none text-center">
-                {correct}
-              </div>
-            </div>
-
-          </div>
+          <span className="font-poppins font-extrabold leading-[100%] text-center" style={{ fontSize: 'min(6.9vw, 26px)', color: '#FEF1D9' }}>
+            {correct}
+          </span>
+          <span className="font-poppins font-extrabold leading-[100%] text-center uppercase" style={{ fontSize: 'min(3.7vw, 14px)', color: '#FEF1D9' }}>
+            DOĞRU
+          </span>
         </div>
 
-        {/* Ana Menü Butonu - %40 (150/375) genişlik, 150/44 oran */}
-        <button
-          onClick={() => navigate('/')}
-          className="w-[40%] aspect-150/44 mt-8 bg-tema-buton2 text-tema-enak flex justify-center items-center active:scale-95 transition-transform hover:opacity-90 rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] font-poppins font-extrabold text-[min(4.8vw,18px)]"
-          style={{ animation: 'boxFadeIn 0.5s ease-out 1.5s forwards', opacity: 0 }}
+        <div 
+          className="flex items-center justify-center gap-[min(2vw,8px)] rounded-[20px] shadow-sm"
+          style={{ 
+            width: 'min(30.4vw, 114px)', 
+            aspectRatio: '114 / 26.72', 
+            backgroundColor: 'var(--Tema-Mat-false, #A50000)' 
+          }}
         >
-          ANA MENÜ
+          <span className="font-poppins font-extrabold leading-[100%] text-center" style={{ fontSize: 'min(6.9vw, 26px)', color: '#FEF1D9' }}>
+            {wrong}
+          </span>
+          <span className="font-poppins font-extrabold leading-[100%] text-center uppercase" style={{ fontSize: 'min(3.7vw, 14px)', color: '#FEF1D9' }}>
+            YANLIŞ
+          </span>
+        </div>
+      </div>
+
+      {/* Orta Alan: Sonuçlar Kutusu - Sadece yanlış varsa gösterilir */}
+      {wrongAnswers.length > 0 && (
+        <div 
+          className="flex items-stretch shadow-sm shrink-0"
+          style={{ 
+            width: 'min(85vw, 240px)', 
+            backgroundColor: '#F8971F', 
+            borderRadius: '12px',
+            padding: '8px', 
+            // Scrollbar varsa gap bırak, yoksa bırakma
+            gap: wrongAnswers.length > 6 ? '8px' : '0px' 
+          }}
+        >
+          {/* 1. LİSTE ALANI */}
+          <div 
+            className="flex-1 overflow-hidden"
+            style={{ borderRadius: '8px' }}
+          >
+            <div 
+              ref={listRef}
+              className="w-full overflow-y-auto hide-scrollbar" 
+              style={{ 
+                maxHeight: 'calc((min(6.8vw, 25.66px) * 6) + (2px * 5))',
+                height: 'max-content',
+                backgroundColor: '#FEF1D9',
+              }}
+            >
+              <div className="flex flex-col gap-0.5" style={{ backgroundColor: '#F8971F' }}>
+                {wrongAnswers.map((ans, idx) => (
+                  <div 
+                    key={idx}
+                    className="w-full flex items-center shrink-0"
+                    style={{ 
+                      height: 'min(6.8vw, 25.66px)',
+                      backgroundColor: '#FEF1D9', 
+                    }}
+                  >
+                    {/* Eşit Gap İçin 5 Sütunlu Grid */}
+                    <div className="grid grid-cols-5 items-center w-full px-10 font-poppins font-extrabold text-tema-yazi uppercase"
+                        style={{ fontSize: 'min(3.8vw, 15px)' }}>
+                      
+                      <span className="text-center">{ans.num1}</span>
+                      <span className="text-center">X</span>
+                      <span className="text-center">{ans.num2}</span>
+                      <span className="text-center mr-2">=</span>
+                      
+                      <div className="flex items-center justify-center whitespace-nowrap">
+                        <span style={{ color: '#A50000' }}>{ans.userAnswer}</span>
+                        <span className="text-[#51AE00] opacity-80 ml-2" style={{ fontSize: '0.8em' }}>
+                          ({ans.num1 * ans.num2})
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 2. SCROLLBAR KANALI - Sadece 6'dan fazla yanlış varsa render edilir */}
+          {wrongAnswers.length > 6 && (
+            <div 
+              ref={channelRef}
+              style={{ 
+                width: '28px', 
+                backgroundColor: '#F8971F', 
+                borderRadius: '100px',
+                border: '2px solid #F5E4C3',
+                position: 'relative',
+                overflow: 'hidden',
+                flexShrink: 0,
+                touchAction: 'none' 
+              }}
+            >
+              <div 
+                ref={thumbRef}
+                onPointerDown={handlePointerDown}
+                style={{ 
+                  position: 'absolute',
+                  width: '100%', 
+                  height: '90px',
+                  backgroundColor: '#F5E4C3', 
+                  borderRadius: '100px',
+                  top: '0px',
+                  left: '0px',
+                  border: '4px solid transparent',
+                  backgroundClip: 'padding-box',
+                  cursor: 'grab',
+                  touchAction: 'none',
+                  transition: 'top 0.05s linear'
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Alt-Orta Alan: Geri Bildirim ve Başarı Oranı */}
+      <div className="flex flex-col items-center space-y-[3vh] shrink-0">
+        <p className="font-poppins font-medium leading-none text-center text-tema-yazi" style={{ fontSize: 'min(3.7vw, 14px)' }}>
+          İyi deneme, biraz daha çalış!
+        </p>
+        
+        <div 
+          className="flex items-center justify-center gap-[min(1.5vw,6px)] shadow-sm"
+          style={{ 
+            width: 'min(32vw, 120px)', 
+            aspectRatio: '120 / 36.88', 
+            borderRadius: '100px',
+            backgroundColor: '#FEF1D9'
+          }}
+        >
+          <span className="font-poppins font-extrabold leading-none text-center" style={{ fontSize: 'min(5.3vw, 20px)', color: '#F8971F' }}>
+            %{successRate}
+          </span>
+          <span className="font-poppins font-semibold leading-none text-center uppercase" style={{ fontSize: 'min(4vw, 15px)', color: '#130D3D' }}>
+            BAŞARI
+          </span>
+        </div>
+      </div>
+
+      {/* Butonlar */}
+      <div className="flex flex-col items-center w-full gap-[1.5vh] mt-auto pb-[4vh] space-y-[1.5vh] shrink-0">
+        <button
+          onClick={() => navigate('/oyun', { state: location.state?.gameConfig })}
+          className="w-[min(53vw,199px)] aspect-199/44 flex items-center justify-center bg-tema-kutu rounded-[10px] shadow-md active:scale-95 transition-transform"
+        >
+          <span className="font-poppins font-extrabold text-[min(6vw,24px)] text-tema-enak uppercase tracking-wider">
+            Tekrar Dene
+          </span>
         </button>
 
+        <button
+          onClick={() => navigate('/')}
+          className="w-[min(40vw,150px)] aspect-150/44 flex items-center justify-center bg-tema-buton2 rounded-[10px] shadow-md active:scale-95 transition-transform"
+        >
+          <span className="font-poppins font-extrabold text-[min(6vw,24px)] text-tema-enak uppercase">
+            Ana Menü
+          </span>
+        </button>
       </div>
+
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 }
