@@ -7,24 +7,23 @@ import WaveHeader from './WaveHeader';
 const getHeaderConfig = (pathname) => {
   switch (pathname) {
     case '/':
-      return { title: 'AKIL KATI', showIcons: false, aspectRatio: '375 / 275', titleTop: '42%' };
+      return { title: 'AKIL KATI', showIcons: false, aspectRatio: '375 / 255', titleTop: '42%' };
     case '/secimli':
-      // \n karakteri whitespace-pre-wrap sayesinde otomatik alt satıra atar
-      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 210', titleTop: '35%' };
+      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 160', titleTop: '25%' };
     case '/oyun':
-      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' };
+      return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '25%' };
     case '/secimli-sonuc':
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
     case '/ezber':
-      return { title: 'EZBER\nKARTLARI', showIcons: true, aspectRatio: '375 / 220', titleTop: '35%' };
+      return { title: 'EZBER\nKARTLARI', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
     case '/sirali':
-      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' };
+      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
     case '/sirali-oyun':
-      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' };
+      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 200', titleTop: '25%' };
     case '/meydan':
-      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' };  
+      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };  
     case '/meydan-oyun':
-      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 250', titleTop: '35%' }; 
+      return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 160', titleTop: '25%' }; 
     case '/meydan-sonuc':
       return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 220', titleTop: '25%' }; 
     default:
@@ -57,7 +56,7 @@ export default function Layout({ children }) {
             style={{ 
               width: '117.6%', 
               left: '-6.4%', 
-              top: '279px',
+              top: '220px',
               aspectRatio: '441/456' 
             }}
           >

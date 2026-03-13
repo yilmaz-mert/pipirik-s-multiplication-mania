@@ -37,38 +37,57 @@ export default function MeydanGamePage() {
   const navigate = useNavigate();
   const { handleAnswer, setMode, timer, resetGame } = useGameStore();
 
-  useEffect(() => {
-    resetGame();
-    setMode('CHALLENGE');
-  }, [setMode, resetGame]);
-
+  // --- 1. STATE TANIMLARI (EN ÜSTTE OLMALI) ---
   const [questions] = useState(() => {
-      let allQuestions = [];
-      
-      for (let i = 2; i <= 9; i++) {
-        for (let j = 2; j <= 9; j++) {
-          allQuestions.push({ num1: i, num2: j, answer: i * j });
-        }
+    let allQuestions = [];
+    for (let i = 2; i <= 9; i++) {
+      for (let j = 2; j <= 9; j++) {
+        allQuestions.push({ num1: i, num2: j, answer: i * j });
       }
-
-      for (let i = allQuestions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
-      }
-
-      return allQuestions.slice(0, 20);
-    });
+    }
+    for (let i = allQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+    }
+    return allQuestions.slice(0, 20);
+  });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [status, setStatus] = useState('idle'); 
   const [localTimer, setLocalTimer] = useState(0);
-  const [showPenalty, setShowPenalty] = useState(false);
+  const [showPenalty, setShowPenalty] = useState(false); // Artık aşağıda güvenle kullanılabilir
   const [results, setResults] = useState({ correct: 0, wrong: 0 });
   const [counterPortal, setCounterPortal] = useState(null);
-
   const [mistakes, setMistakes] = useState(0);
   const [wrongGuesses, setWrongGuesses] = useState([]);
+
+  // --- 2. EFFECT BLOKLARI (STATE'LERDEN SONRA GELMELİ) ---
+  useEffect(() => {
+    const t = setTimeout(() => {
+      resetGame();
+      setMode('CHALLENGE');
+    }, 0);
+    return () => clearTimeout(t);
+  }, [setMode, resetGame]);
+
+  useEffect(() => {
+    if (timer > 0) {
+      // İşlemi bir sonraki "tick"e atarak senkron render hatasını çözüyoruz
+      const penaltyId = setTimeout(() => {
+        setLocalTimer(prev => prev + 10);
+        setShowPenalty(true);
+      }, 0);
+
+      // 1.5 saniye sonra cezayı gizle
+      const hideId = setTimeout(() => setShowPenalty(false), 1500);
+
+      return () => {
+        clearTimeout(penaltyId);
+        clearTimeout(hideId);
+      };
+    }
+  }, [timer]);
 
   useEffect(() => {
     const cTarget = document.getElementById('wave-header-counter-target');
@@ -83,18 +102,6 @@ export default function MeydanGamePage() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (timer > 0) {
-      Promise.resolve().then(() => {
-        setLocalTimer(prev => prev + 10);
-        setShowPenalty(true);
-      });
-      
-      const timeoutId = setTimeout(() => setShowPenalty(false), 1500);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [timer]);
 
   const [playClick] = useSound('/sounds/click.ogg', { volume: 0.5 });
   const [playCorrect] = useSound('/sounds/correct.ogg');
@@ -188,7 +195,7 @@ export default function MeydanGamePage() {
     <div className="w-full h-full relative flex flex-col items-center pb-10">
       
       {counterPortal && createPortal(
-        <div className="relative w-full h-full font-poppins font-extrabold" style={{ color: '#F5E4C3' }}>
+        <div className="relative w-full h-full font-poppins font-extrabold -translate-y-4" style={{ color: '#F5E4C3' }}>
           <span className="absolute text-[15px] leading-5.5 text-center" style={{ left: '5%', top: '14.28%', width: '23px' }}>{currentIndex + 1}</span>
           <span className="absolute text-[32px] leading-12 text-center" style={{ left: '40%', top: '0%', width: '7px' }}>/</span>
           <span className="absolute text-[15px] leading-5.5 text-center" style={{ left: '55%', top: '54.76%', width: '28px' }}>{questions.length}</span>
@@ -196,7 +203,7 @@ export default function MeydanGamePage() {
         counterPortal
       )}
 
-      <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-2">
+      <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-4">
         
         {/* TIMER */}
         <div className="relative flex flex-col items-center">
@@ -262,7 +269,7 @@ export default function MeydanGamePage() {
         </div>
 
         {/* YANLIŞ TAHMİNLER */}
-        <div className="w-full grid grid-cols-3 gap-x-9 px-4 h-5 mt-2">
+        <div className="w-full grid grid-cols-3 gap-x-9 px-4 h-5 mt-1">
           <div className="col-start-3 flex justify-center gap-1">
             {wrongGuesses.map((guess, idx) => (
               <div 
@@ -276,7 +283,7 @@ export default function MeydanGamePage() {
         </div>
 
         {/* X'LER ALANI */}
-        <div className="w-full flex justify-center items-center h-1 mb-2 gap-">
+        <div className="w-full flex justify-center items-center h-1 mb-1 gap-">
           {[...Array(mistakes)].map((_, i) => (
             <span key={i} className="font-poppins font-extrabold text-[7.5vw] min-[512px]:text-[28px] text-tema-yazi tracking-widest">X</span>
           ))}

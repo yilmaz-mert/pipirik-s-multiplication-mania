@@ -136,7 +136,7 @@ export default function SiraliGamePage() {
       
       {portalTarget && createPortal(
         <div className="w-[89.33%] max-w-83.75 flex flex-col animate-[fadeInProgress_0.5s_ease-out_forwards]">
-          <div className="flex justify-end w-full mb-1">
+          <div className="flex justify-end w-full -mb-2 -translate-y-4">
             <span className="text-tema-enak font-poppins font-extrabold text-[13px] leading-none">
               {currentIndex + 1} / {questions.length}
             </span>
@@ -151,7 +151,7 @@ export default function SiraliGamePage() {
         portalTarget 
       )}
 
-      <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-4">
+      <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-2">
 
         <div 
           key={currentIndex}
@@ -195,7 +195,7 @@ export default function SiraliGamePage() {
           </div>
         </div>
 
-        <div className="w-full grid grid-cols-3 gap-x-9 gap-y-4 px-4 mt-8">
+        <div className="w-full grid grid-cols-3 gap-x-9 gap-y-4 px-4 mt-4">
           {numpadKeys.map((key) => (
             <button
               key={key}
