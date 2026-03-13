@@ -7,7 +7,7 @@ import WaveHeader from './WaveHeader';
 const getHeaderConfig = (pathname) => {
   switch (pathname) {
     case '/':
-      return { title: 'AKIL KATI', showIcons: false, aspectRatio: '375 / 255', titleTop: '42%' };
+      return { title: 'AKIL KATI', showIcons: false, aspectRatio: '375 / 240', titleTop: '42%' };
     case '/secimli':
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 160', titleTop: '25%' };
     case '/oyun':
