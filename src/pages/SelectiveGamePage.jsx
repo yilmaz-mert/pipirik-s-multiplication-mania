@@ -62,6 +62,14 @@ export default function SelectiveGamePage() {
   const [playCorrect] = useSound('/sounds/correct.ogg');
   const [playWrong] = useSound('/sounds/wrong.ogg');
 
+  // Güvenli titreşim tetikleyici fonksiyon
+  const triggerVibration = (pattern) => {
+    // window ve navigator nesnelerinin varlığını, ardından vibrate desteğini kontrol et
+    if (typeof window !== 'undefined' && navigator && navigator.vibrate) {
+      navigator.vibrate(pattern);
+    }
+  };
+
   if (questions.length === 0) return null;
 
   const currentQuestion = questions[currentIndex];
@@ -99,12 +107,14 @@ export default function SelectiveGamePage() {
     if (status !== 'idle') return; 
     if (userInput === '' && value === '0') return;
     playClick();
+    triggerVibration(25);
     if (userInput.length < 3) setUserInput(prev => prev + value);
   };
 
   const handleDelete = () => {
     if (status !== 'idle') return;
     playClick();
+    triggerVibration(35);
     setUserInput(prev => prev.slice(0, -1));
   };
 
@@ -127,9 +137,11 @@ export default function SelectiveGamePage() {
     if (isCorrect) {
       playCorrect();
       setStatus('correct');
+      triggerVibration([35, 40, 35]);
       setResults(prev => ({ ...prev, correct: prev.correct + 1 }));
     } else {
       playWrong();
+      triggerVibration([60, 40, 60]);
       setStatus('wrong');
       setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
     }

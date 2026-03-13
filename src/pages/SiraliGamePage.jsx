@@ -95,14 +95,14 @@ export default function SiraliGamePage() {
     if (status !== 'idle') return; 
     if (userInput === '' && value === '0') return;
     playClick();
-    triggerVibration(10);
+    triggerVibration(25);
     if (userInput.length < 3) setUserInput(prev => prev + value);
   };
 
   const handleDelete = () => {
     if (status !== 'idle') return;
     playClick();
-    triggerVibration(15);
+    triggerVibration(35);
     setUserInput(prev => prev.slice(0, -1));
   };
 
@@ -113,12 +113,12 @@ export default function SiraliGamePage() {
 
     if (isCorrect) {
       playCorrect();
-      triggerVibration([15, 30, 15]);
+      triggerVibration([35, 40, 35]);
       setStatus('correct');
       setResults(prev => ({ ...prev, correct: prev.correct + 1 }));
     } else {
       playWrong();
-      triggerVibration([30, 50, 30]);
+      triggerVibration([60, 40, 60]);
       setStatus('wrong');
       setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
     }

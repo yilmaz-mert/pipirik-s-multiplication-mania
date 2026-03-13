@@ -107,6 +107,13 @@ export default function MeydanGamePage() {
   const [playCorrect] = useSound('/sounds/correct.ogg');
   const [playWrong] = useSound('/sounds/wrong.ogg');
 
+  const triggerVibration = (pattern) => {
+    // window ve navigator nesnelerinin varlığını, ardından vibrate desteğini kontrol et
+    if (typeof window !== 'undefined' && navigator && navigator.vibrate) {
+      navigator.vibrate(pattern);
+    }
+  };
+
   if (questions.length === 0) return null;
 
   const currentQuestion = questions[currentIndex];
@@ -122,12 +129,14 @@ export default function MeydanGamePage() {
     if (status !== 'idle') return; 
     if (userInput === '' && value === '0') return;
     playClick();
+    triggerVibration(25);
     if (userInput.length < 3) setUserInput(prev => prev + value);
   };
 
   const handleDelete = () => {
     if (status !== 'idle') return;
     playClick();
+    triggerVibration(35);
     setUserInput(prev => prev.slice(0, -1));
   };
 
@@ -141,6 +150,7 @@ export default function MeydanGamePage() {
       useGameStore.setState({ currentQuestion }); 
       handleAnswer(userInput);
       playCorrect();
+      triggerVibration([35, 40, 35]);
       setStatus('correct');
       setResults(prev => ({ ...prev, correct: prev.correct + 1 }));
 
@@ -159,6 +169,7 @@ export default function MeydanGamePage() {
     } else {
       // YANLIŞ CEVAP DURUMU
       playWrong();
+      triggerVibration([60, 40, 60]);
       setStatus('wrong');
       const newMistakes = mistakes + 1;
       setMistakes(newMistakes);
