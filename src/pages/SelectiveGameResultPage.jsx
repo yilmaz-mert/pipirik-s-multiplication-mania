@@ -10,6 +10,28 @@ export default function SelectiveGameResultPage() {
   const total = correct + wrong;
   const successRate = total > 0 ? Math.round((correct / total) * 100) : 0;
 
+  // --- DİNAMİK GERİ BİLDİRİM VE SAYI RENK MANTIĞI ---
+  const getFeedbackConfig = () => {
+    if (successRate >= 80) {
+      return {
+        text: "Çok İyi Bir İş Çıkardın!",
+        numberColor: "#51AE00" // Yeşil
+      };
+    } else if (successRate >= 60) {
+      return {
+        text: "İyi deneme, biraz daha çalış!",
+        numberColor: "#F8971F" // Turuncu
+      };
+    } else {
+      return {
+        text: "Tekrar denemek ister misin?",
+        numberColor: "#A50000" // Kırmızı
+      };
+    }
+  };
+
+  const feedback = getFeedbackConfig();
+
   // SADECE YANLIŞ CEVAPLARI FİLTRELE
   const wrongAnswers = answers.filter(ans => !ans.isCorrect);
 
@@ -241,25 +263,31 @@ export default function SelectiveGameResultPage() {
         </div>
       )}
 
-      {/* Alt-Orta Alan: Geri Bildirim ve Başarı Oranı */}
-      <div className="flex flex-col items-center space-y-[3vh] shrink-0">
-        <p className="font-poppins font-medium leading-none text-center text-tema-yazi" style={{ fontSize: 'min(3.7vw, 14px)' }}>
-          İyi deneme, biraz daha çalış!
+      {/* --- ALT-ORTA ALAN: GÜNCELLENEN KISIM --- */}
+      <div className="flex flex-col items-center space-y-[2vh] shrink-0">
+        
+        {/* SADECE METİN (Kutu yok, Renk sabit #130D3D) */}
+        <p className="font-poppins font-normal leading-tight text-center" 
+           style={{ fontSize: 'min(4vw, 16px)', color: '#130D3D' }}>
+          {feedback.text}
         </p>
         
+        {/* BAŞARI ORANI KUTUSU */}
         <div 
           className="flex items-center justify-center gap-[min(1.5vw,6px)] shadow-sm"
           style={{ 
-            width: 'min(32vw, 120px)', 
-            aspectRatio: '120 / 36.88', 
+            width: 'min(36vw, 140px)', 
+            aspectRatio: '140 / 40', 
             borderRadius: '100px',
-            backgroundColor: '#FEF1D9'
+            background: 'var(--Tema-Mat-ak-yaz-rengi, #FEF1D9)' // Sabit Krem Arka Plan
           }}
         >
-          <span className="font-poppins font-extrabold leading-none text-center" style={{ fontSize: 'min(5.3vw, 20px)', color: '#F8971F' }}>
+          <span className="font-poppins font-extrabold leading-none text-center" 
+                style={{ fontSize: 'min(5.5vw, 22px)', color: feedback.numberColor }}> {/* Dinamik % Renk */}
             %{successRate}
           </span>
-          <span className="font-poppins font-semibold leading-none text-center uppercase" style={{ fontSize: 'min(4vw, 15px)', color: '#130D3D' }}>
+          <span className="font-poppins font-semibold leading-none text-center uppercase" 
+                style={{ fontSize: 'min(3.5vw, 14px)', color: '#130D3D' }}>
             BAŞARI
           </span>
         </div>
