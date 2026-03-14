@@ -10,7 +10,7 @@ const getHeaderConfig = (pathname) => {
       return { title: 'AKIL KATI', showIcons: false, aspectRatio: '375 / 240', titleTop: '42%' };
     case '/secimli':
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 160', titleTop: '25%' };
-    case '/oyun':
+    case '/secimli-oyun':
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '25%' };
     case '/secimli-sonuc':
       return { title: 'SEÇİMLİ\nTEST', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
@@ -19,6 +19,8 @@ const getHeaderConfig = (pathname) => {
     case '/sirali':
       return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };
     case '/sirali-oyun':
+      return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 200', titleTop: '25%' };
+    case '/sirali-sonuc':
       return { title: 'SIRALI\nSEÇİM', showIcons: true, aspectRatio: '375 / 200', titleTop: '25%' };
     case '/meydan':
       return { title: 'MEYDAN\nOKUMA', showIcons: true, aspectRatio: '375 / 200', titleTop: '35%' };  

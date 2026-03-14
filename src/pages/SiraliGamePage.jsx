@@ -14,16 +14,13 @@ export default function SiraliGamePage() {
     const tables = location.state?.selected || ['mix'];
     
     if (tables.includes('mix')) {
-      // Karışık seçilse bile sıralı modda olduğumuz için 2'den 9'a kadar her şeyi sırayla ekleriz
       for (let i = 2; i <= 9; i++) {
         for (let j = 1; j <= 10; j++) {
           newQuestions.push({ num1: i, num2: j, answer: i * j });
         }
       }
     } else {
-      // Seçilen tabloları küçükten büyüğe sıralayalım (Örn: önce 2'ler, sonra 3'ler)
       const sortedTables = [...tables].sort((a, b) => a - b);
-      
       sortedTables.forEach(table => {
         for (let i = 1; i <= 10; i++) {
           newQuestions.push({ num1: table, num2: i, answer: table * i });
@@ -36,7 +33,8 @@ export default function SiraliGamePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [status, setStatus] = useState('idle'); 
-  const [results, setResults] = useState({ correct: 0, wrong: 0 });
+  // GÜNCELLEME: answers dizisi eklendi
+  const [results, setResults] = useState({ correct: 0, wrong: 0, answers: [] });
   const [isExiting, setIsExiting] = useState(false);
 
   const [portalTarget, setPortalTarget] = useState(null);
@@ -52,7 +50,6 @@ export default function SiraliGamePage() {
   const [playWrong] = useSound('/sounds/wrong.ogg');
 
   const triggerVibration = (pattern) => {
-    // window ve navigator nesnelerinin varlığını, ardından vibrate desteğini kontrol et
     if (typeof window !== 'undefined' && navigator && navigator.vibrate) {
       navigator.vibrate(pattern);
     }
@@ -111,16 +108,32 @@ export default function SiraliGamePage() {
     
     const isCorrect = parseInt(userInput, 10) === currentQuestion.answer;
 
+    // Her cevap için detaylı veri objesi oluşturuluyor
+    const currentAnswerData = {
+      num1: currentQuestion.num1,
+      num2: currentQuestion.num2,
+      userAnswer: userInput,
+      isCorrect: isCorrect
+    };
+
     if (isCorrect) {
       playCorrect();
       triggerVibration([35, 40, 35]);
       setStatus('correct');
-      setResults(prev => ({ ...prev, correct: prev.correct + 1 }));
+      setResults(prev => ({ 
+        ...prev, 
+        correct: prev.correct + 1,
+        answers: [...prev.answers, currentAnswerData]
+      }));
     } else {
       playWrong();
       triggerVibration([60, 40, 60]);
       setStatus('wrong');
-      setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
+      setResults(prev => ({ 
+        ...prev, 
+        wrong: prev.wrong + 1,
+        answers: [...prev.answers, currentAnswerData]
+      }));
     }
 
     setTimeout(() => {
@@ -133,10 +146,19 @@ export default function SiraliGamePage() {
           setIsExiting(false);
         }, 300); 
       } else {
+        // GÜNCELLEME: Final verileri hesaplanıp /sirali-sonuc sayfasına gönderiliyor
         const finalCorrect = isCorrect ? results.correct + 1 : results.correct;
         const finalWrong = !isCorrect ? results.wrong + 1 : results.wrong;
-        // Sonuç sayfası için seçimli testin sonuç sayfasını ortak kullanabiliriz
-        navigate('/secimli-sonuc', { state: { correct: finalCorrect, wrong: finalWrong } });
+        const finalAnswersList = [...results.answers, currentAnswerData];
+
+        navigate('/sirali-sonuc', { 
+          state: { 
+            correct: finalCorrect, 
+            wrong: finalWrong,
+            answers: finalAnswersList,
+            gameConfig: location.state // Tekrar dene fonksiyonu için ayarları taşıyoruz
+          } 
+        });
       }
     }, 700);
   };

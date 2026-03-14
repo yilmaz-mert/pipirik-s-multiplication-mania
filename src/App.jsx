@@ -7,9 +7,11 @@ import SelectiveGameResultPage from './pages/SelectiveGameResultPage';
 import EzberKartlariPage from './pages/EzberKartlariPage';
 import SiraliTestPage from './pages/SiraliTestPage';
 import SiraliGamePage from './pages/SiraliGamePage';
+import SiraliGameResultPage from './pages/SiraliGameResultPage';
 import MeydanGamePage from './pages/MeydanGamePage';
 import MeydanPage from './pages/MeydanPage';
 import MeydanResultPage from './pages/MeydanResultPage';
+
 
 function App() {
   return (
@@ -21,11 +23,12 @@ function App() {
           <Route path="/ezber" element={<EzberKartlariPage />} />
           <Route path="/sirali" element={<SiraliTestPage />} />
           <Route path="/sirali-oyun" element={<SiraliGamePage />} />
+          <Route path="/sirali-sonuc" element={<SiraliGameResultPage />} />
           <Route path="/meydan-oyun" element={<MeydanGamePage/>} />
           <Route path="/meydan" element={<MeydanPage/>} />
           <Route path="/meydan-sonuc" element={<MeydanResultPage/>} />
           <Route path="/secimli" element={<SelectiveTestPage />} />
-          <Route path="/oyun" element={<SelectiveGamePage />} />
+          <Route path="/secimli-oyun" element={<SelectiveGamePage />} />
           <Route path="/secimli-sonuc" element={<SelectiveGameResultPage />} />
 
         </Routes>
