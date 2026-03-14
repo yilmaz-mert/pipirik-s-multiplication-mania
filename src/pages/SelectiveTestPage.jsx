@@ -49,7 +49,7 @@ export default function SelectiveTestPage() {
       alert("Lütfen en az bir seçenek belirleyin!");
       return;
     }
-    navigate('/oyun', { state: { selected } });
+    navigate('/secimli-oyun', { state: { selected } });
   };
 
 return (

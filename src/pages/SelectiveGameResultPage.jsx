@@ -19,7 +19,7 @@ export default function SelectiveGameResultPage() {
 
   // Navigasyon Fonksiyonları
   const handleRetry = () => {
-    navigate('/oyun', { state: location.state?.gameConfig });
+    navigate('/secimli-oyun', { state: location.state?.gameConfig });
   };
 
   const handleMainMenu = () => {
