@@ -57,7 +57,7 @@ export default function MeydanGamePage() {
   const [status, setStatus] = useState('idle'); 
   const [localTimer, setLocalTimer] = useState(0);
   const [showPenalty, setShowPenalty] = useState(false); // Artık aşağıda güvenle kullanılabilir
-  const [results, setResults] = useState({ correct: 0, wrong: 0 });
+  const [results, setResults] = useState({ correct: 0, wrong: 0, answers: [] });
   const [counterPortal, setCounterPortal] = useState(null);
   const [mistakes, setMistakes] = useState(0);
   const [wrongGuesses, setWrongGuesses] = useState([]);
@@ -143,16 +143,31 @@ export default function MeydanGamePage() {
   const handleCheck = () => {
     if (status !== 'idle' || userInput === '') return;
     
+    // --- KRİTİK DÜZELTME: Store'daki currentQuestion'ı her kontrolde güncelle ---
+    useGameStore.setState({ currentQuestion });
+
     const isCorrect = parseInt(userInput, 10) === currentQuestion.answer;
 
+    // Yeni cevap verisini oluştur (Result sayfasında listelemek için)
+    const currentAnswerData = {
+      num1: currentQuestion.num1,
+      num2: currentQuestion.num2,
+      userAnswer: userInput,
+      isCorrect: isCorrect
+    };
+
     if (isCorrect) {
-      // Doğru cevap mantığı aynı kalıyor
-      useGameStore.setState({ currentQuestion }); 
-      handleAnswer(userInput);
+      handleAnswer(userInput); // Store'daki doğru cevap mantığını çalıştırır
       playCorrect();
       triggerVibration([35, 40, 35]);
       setStatus('correct');
-      setResults(prev => ({ ...prev, correct: prev.correct + 1 }));
+      
+      // Yerel results state'ini ve cevap listesini güncelle
+      setResults(prev => ({ 
+        ...prev, 
+        correct: prev.correct + 1,
+        answers: [...prev.answers, currentAnswerData]
+      }));
 
       setTimeout(() => {
         if (currentIndex + 1 < questions.length) {
@@ -162,7 +177,15 @@ export default function MeydanGamePage() {
           setMistakes(0);
           setWrongGuesses([]);
         } else {
-          navigate('/meydan-sonuc', { state: { time: localTimer, correct: results.correct + 1, wrong: results.wrong } });
+          // OYUN BİTTİ (DOĞRU İLE)
+          navigate('/meydan-sonuc', { 
+            state: { 
+              time: localTimer, 
+              correct: results.correct + 1, 
+              wrong: results.wrong,
+              answers: [...results.answers, currentAnswerData] 
+            } 
+          });
         }
       }, 700);
 
@@ -174,12 +197,17 @@ export default function MeydanGamePage() {
       const newMistakes = mistakes + 1;
       setMistakes(newMistakes);
       setWrongGuesses(prev => [...prev, userInput]);
+      
+      // Her yanlış tahmini de listeye ekliyoruz
+      setResults(prev => ({ 
+        ...prev, 
+        answers: [...prev.answers, currentAnswerData]
+      }));
 
-      // --- KRİTİK DEĞİŞİKLİK: Her yanlışta Store'u bilgilendir ---
-      handleAnswer(userInput); 
+      handleAnswer(userInput); // Store'daki yanlış/ceza mantığını çalıştırır
 
       if (newMistakes >= 3) {
-        // Soruyu tamamen kaybettiğinde toplam yanlış sonucunu artır
+        // Soru tamamen kaybedildiğinde
         setResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
         
         setTimeout(() => {
@@ -190,7 +218,15 @@ export default function MeydanGamePage() {
             setMistakes(0);
             setWrongGuesses([]);
           } else {
-            navigate('/meydan-sonuc', { state: { time: localTimer, correct: results.correct, wrong: results.wrong + 1 } });
+            // OYUN BİTTİ (YANLIŞ İLE)
+            navigate('/meydan-sonuc', { 
+              state: { 
+                time: localTimer, 
+                correct: results.correct, 
+                wrong: results.wrong + 1,
+                answers: [...results.answers, currentAnswerData]
+              } 
+            });
           }
         }, 700);
       } else {

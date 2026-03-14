@@ -124,7 +124,7 @@ export default function WrongAnswersList({ wrongAnswers }) {
                 style={{ height: 'min(6.8vw, 25.66px)', backgroundColor: '#FEF1D9' }}
               >
                 {/* --- 6 SÜTUNLU GRID YAPISI --- */}
-                <div className="grid grid-cols-6 items-center w-full px-8 font-poppins font-extrabold text-tema-yazi uppercase"
+                <div className="grid grid-cols-6 items-center w-full px-4 font-poppins font-extrabold text-tema-yazi uppercase"
                     style={{ fontSize: 'min(3.4vw, 14px)' }}>
                   
                   <span className="text-center">{ans.num1}</span>
