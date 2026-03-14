@@ -12,7 +12,6 @@ export default function WrongAnswersList({ wrongAnswers }) {
   const startScrollTop = useRef(0);
   const rafRef = useRef(null);
 
-  // 1. Kapsül Pozisyon Güncelleme (Stabil)
   const updateThumbPosition = useCallback(() => {
     const list = listRef.current;
     const thumb = thumbRef.current;
@@ -38,7 +37,6 @@ export default function WrongAnswersList({ wrongAnswers }) {
     thumb.style.top = `${newTop}px`;
   }, []);
 
-  // 2. Sürükleme Hareketi (Stabil)
   const handlePointerMove = useCallback((e) => {
     if (!isDragging.current) return;
 
@@ -60,17 +58,14 @@ export default function WrongAnswersList({ wrongAnswers }) {
     });
   }, []);
 
-  // 3. Sürüklemeyi Başlatma
   const handlePointerDown = (e) => {
     isDragging.current = true;
-    setIsDraggingActive(true); // Sadece state'i tetikliyoruz, gerisini useEffect hallediyor
+    setIsDraggingActive(true);
     startY.current = e.clientY;
     startScrollTop.current = listRef.current.scrollTop;
-    
     if (thumbRef.current) thumbRef.current.style.transition = 'none'; 
   };
 
-  // 4. PRO ÇÖZÜM: Window Dinleyicilerini State'e Bağlı Yönetme
   useEffect(() => {
     if (!isDraggingActive) return;
 
@@ -81,12 +76,10 @@ export default function WrongAnswersList({ wrongAnswers }) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
 
-    // Dinleyicileri ekle
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerup', handlePointerUp);
     document.body.style.userSelect = 'none';
 
-    // Cleanup: State false olduğunda veya component kapandığında temizle
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
@@ -95,7 +88,6 @@ export default function WrongAnswersList({ wrongAnswers }) {
     };
   }, [isDraggingActive, handlePointerMove]);
 
-  // 5. Liste Kaydırma Dinleyicisi
   useEffect(() => {
     const list = listRef.current;
     if (list) {
@@ -131,18 +123,27 @@ export default function WrongAnswersList({ wrongAnswers }) {
                 className="w-full flex items-center shrink-0"
                 style={{ height: 'min(6.8vw, 25.66px)', backgroundColor: '#FEF1D9' }}
               >
-                <div className="grid grid-cols-5 items-center w-full px-10 font-poppins font-extrabold text-tema-yazi uppercase"
-                    style={{ fontSize: 'min(3.8vw, 15px)' }}>
+                {/* --- 6 SÜTUNLU GRID YAPISI --- */}
+                <div className="grid grid-cols-6 items-center w-full px-8 font-poppins font-extrabold text-tema-yazi uppercase"
+                    style={{ fontSize: 'min(3.4vw, 14px)' }}>
+                  
                   <span className="text-center">{ans.num1}</span>
-                  <span className="text-center">X</span>
+                  <span className="text-center text-[0.8em] opacity-60">X</span>
                   <span className="text-center">{ans.num2}</span>
-                  <span className="text-center mr-2">=</span>
-                  <div className="flex items-center justify-center whitespace-nowrap">
-                    <span style={{ color: '#A50000' }}>{ans.userAnswer}</span>
-                    <span className="text-[#51AE00] opacity-80 ml-2" style={{ fontSize: '0.8em' }}>
-                      ({ans.num1 * ans.num2})
-                    </span>
+                  <span className="text-center text-[0.8em] opacity-60">=</span>
+                  
+                  {/* Yanlış Cevap Sütunu */}
+                  <span className="text-center" style={{ color: '#A50000' }}>
+                    {ans.userAnswer}
+                  </span>
+                  
+                  {/* Doğru Cevap Sütunu (Ayrı sütun olarak ayrıldı) */}
+                  <div className="flex items-center justify-center opacity-80" style={{ color: '#51AE00' }}>
+                    <span className="text-[0.7em] mr-0.5">(</span>
+                    <span>{ans.num1 * ans.num2}</span>
+                    <span className="text-[0.7em] ml-0.5">)</span>
                   </div>
+
                 </div>
               </div>
             ))}
@@ -155,7 +156,7 @@ export default function WrongAnswersList({ wrongAnswers }) {
           ref={channelRef}
           aria-hidden="true"
           style={{ 
-            width: '28px', backgroundColor: '#F8971F', borderRadius: '100px',
+            width: '24px', backgroundColor: '#F8971F', borderRadius: '100px',
             border: '2px solid #F5E4C3', position: 'relative', overflow: 'hidden', flexShrink: 0, touchAction: 'none' 
           }}
         >
