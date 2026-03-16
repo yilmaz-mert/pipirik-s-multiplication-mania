@@ -21,15 +21,7 @@ body {
   font-family: var(--font-poppins);
 }
 
-/* QuestionCard slide and feedback animations — referenced via inline style in QuestionCard.jsx */
-@keyframes slideInQuestion {
-  from { transform: translateX(60px); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
-}
-@keyframes slideOutQuestion {
-  from { transform: translateX(0);     opacity: 1; }
-  to   { transform: translateX(-60px); opacity: 0; }
-}
+/* QuestionCard answer-cell feedback animations — referenced via inline style in QuestionCard.jsx */
 @keyframes bounceCorrect {
   0%,100% { transform: scale(1); }
   40%     { transform: scale(1.15); }
