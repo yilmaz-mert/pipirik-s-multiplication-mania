@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSound from 'use-sound';
-import Numpad from '../components/Numpad'; // Yeni ekledik
+import Numpad from '../components/Numpad';
+import QuestionCard from '../components/QuestionCard';
 
 export default function SiraliGamePage() {
   const location = useLocation();
@@ -104,35 +105,15 @@ export default function SiraliGamePage() {
         </div>, portalTarget 
       )}
       <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-2">
-        <div 
+        <QuestionCard
           key={currentIndex}
-          className="relative w-full h-24 bg-tema-kutu rounded-[20px] shadow-sm mb-2 flex items-center px-4 overflow-hidden"
-          style={{ animation: isExiting ? 'slideOutQuestion 0.3s ease-in forwards' : 'slideInQuestion 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}
-        >
-          <div className="w-full grid grid-cols-3 gap-x-9">
-            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center">
-              <span className="font-poppins font-extrabold text-[32px] text-tema-yazi">{currentQuestion?.num1}</span>
-            </div>
-            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center">
-              <span className="font-poppins font-extrabold text-[32px] text-tema-yazi">{currentQuestion?.num2}</span>
-            </div>
-            <div 
-              className="w-full aspect-74/70 rounded-[20px] flex items-center justify-center transition-colors duration-300 shadow-inner"
-              style={{
-                backgroundColor: status === 'correct' ? '#D4EDDA' : status === 'wrong' ? '#F8D7DA' : 'var(--color-tema-enak)',
-                animation: status === 'correct' ? 'bounceCorrect 0.6s ease-in-out' : status === 'wrong' ? 'shakeWrong 0.4s ease-in-out' : 'none'
-              }}
-            >
-              <span className="font-poppins font-extrabold text-[32px]" style={{ color: status === 'correct' ? '#155724' : status === 'wrong' ? '#721C24' : 'var(--color-tema-yazi)' }}>
-                {userInput}
-              </span>
-            </div>
-          </div>
-          <div className="absolute left-[33.33%] top-1/2 -translate-x-1/2 -translate-y-1/2"><span className="font-poppins font-extrabold text-[32px] text-tema-yazi">×</span></div>
-          <div className="absolute left-[66.66%] top-1/2 -translate-x-1/2 -translate-y-1/2"><span className="font-poppins font-extrabold text-[32px] text-tema-yazi">=</span></div>
-        </div>
+          num1={currentQuestion?.num1}
+          num2={currentQuestion?.num2}
+          userInput={userInput}
+          status={status}
+          isExiting={isExiting}
+        />
 
-        {/* --- MODÜLER NUMPAD KULLANIMI --- */}
         <Numpad userInput={userInput} onNumpadPress={handleNumpad} onDelete={handleDelete} onCheck={handleCheck} className="mt-4" />
       </div>
     </div>

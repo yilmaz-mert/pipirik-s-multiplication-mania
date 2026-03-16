@@ -5,7 +5,8 @@ import useSound from 'use-sound';
 import { useGameStore } from '../store/useGameStore';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-import Numpad from '../components/Numpad'; // Yeni ekledik
+import Numpad from '../components/Numpad';
+import QuestionCard from '../components/QuestionCard';
 
 const FlipNumber = ({ value }) => {
   return (
@@ -214,50 +215,46 @@ export default function MeydanGamePage() {
         counterPortal
       )}
       <div className="relative z-20 w-[89.33%] max-w-83.75 flex flex-col items-center mt-4">
-        <div className="relative flex flex-col items-center">
-          <div 
-            className="bg-tema-kutu flex items-center justify-center relative z-30 overflow-hidden font-poppins font-extrabold text-[14px] text-tema-yazi leading-none" 
-            style={{ width: '75px', height: '23px', borderTopLeftRadius: '5px', borderTopRightRadius: '5px' }}
-          >
-            {formatTime(localTimer).split('').map((char, index) => (
-              char === ':' ? (
-                <span key="colon" className="mx-px mb-px">:</span>
-              ) : (
-                <div key={index} className="relative w-2.75 h-full flex items-center justify-center">
-                  <FlipNumber value={char} />
-                </div>
-              )
-            ))}
-          </div>
-          <AnimatePresence>
-            {showPenalty && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} className="absolute -top-7 z-50 font-poppins font-extrabold text-[14px] text-[#721C24] whitespace-nowrap drop-shadow-sm">
-                +10 Sn Ceza!
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        <div className="relative w-full h-24 bg-tema-kutu rounded-[20px] shadow-sm flex items-center px-4">
-          <div className="w-full grid grid-cols-3 gap-x-9">
-            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center overflow-hidden font-poppins font-extrabold text-[32px] text-tema-yazi">
-              <FlipNumber value={currentQuestion?.num1} />
+        <QuestionCard
+          key="static-question-card"
+          disableAnimation={true}
+          num1={currentQuestion?.num1}
+          num2={currentQuestion?.num2}
+          userInput={userInput}
+          status={status}
+          renderValue={(value) => <FlipNumber value={value} />}
+          headerContent={
+            <div className="relative flex flex-col items-center">
+              <div
+                className="bg-tema-kutu flex items-center justify-center relative z-30 overflow-hidden font-poppins font-extrabold text-[14px] text-tema-yazi leading-none"
+                style={{ width: '75px', height: '23px', borderTopLeftRadius: '5px', borderTopRightRadius: '5px' }}
+              >
+                {formatTime(localTimer).split('').map((char, index) => (
+                  char === ':' ? (
+                    <span key="colon" className="mx-px mb-px">:</span>
+                  ) : (
+                    <div key={index} className="relative w-2.75 h-full flex items-center justify-center">
+                      <FlipNumber value={char} />
+                    </div>
+                  )
+                ))}
+              </div>
+              <AnimatePresence>
+                {showPenalty && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    className="absolute -top-7 z-50 font-poppins font-extrabold text-[14px] text-[#721C24] whitespace-nowrap drop-shadow-sm"
+                  >
+                    +10 Sn Ceza!
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <div className="w-full aspect-74/70 bg-tema-enak rounded-[20px] flex items-center justify-center overflow-hidden font-poppins font-extrabold text-[32px] text-tema-yazi">
-              <FlipNumber value={currentQuestion?.num2} />
-            </div>
-            <div 
-              className="relative w-full aspect-74/70 rounded-[20px] flex items-center justify-center transition-colors duration-300 shadow-inner overflow-hidden font-poppins font-extrabold text-[32px]"
-              style={{ 
-                backgroundColor: status === 'correct' ? '#D4EDDA' : status === 'wrong' ? '#F8D7DA' : 'var(--color-tema-enak)',
-                color: status === 'correct' ? '#155724' : status === 'wrong' ? '#721C24' : 'var(--color-tema-yazi)'
-              }}
-            >
-              <FlipNumber value={userInput !== '' ? userInput : ' '} />
-            </div>
-          </div>
-          <div className="absolute left-[33.33%] top-1/2 -translate-x-1/2 -translate-y-1/2"><span className="font-poppins font-extrabold text-[32px] text-tema-yazi">×</span></div>
-          <div className="absolute left-[66.66%] top-1/2 -translate-x-1/2 -translate-y-1/2"><span className="font-poppins font-extrabold text-[32px] text-tema-yazi">=</span></div>
-        </div>
+          }
+        />
+
         <div className="w-full grid grid-cols-3 gap-x-9 px-4 h-5 mt-1">
           <div className="col-start-3 flex justify-center gap-1">
             {wrongGuesses.map((guess, idx) => (
@@ -273,13 +270,12 @@ export default function MeydanGamePage() {
           ))}
         </div>
 
-        {/* --- MODÜLER NUMPAD KULLANIMI --- */}
-        <Numpad 
-          userInput={userInput} 
-          onNumpadPress={handleNumpad} 
-          onDelete={handleDelete} 
-          onCheck={handleCheck} 
-          className="mt-4" 
+        <Numpad
+          userInput={userInput}
+          onNumpadPress={handleNumpad}
+          onDelete={handleDelete}
+          onCheck={handleCheck}
+          className="mt-4"
         />
       </div>
     </div>
