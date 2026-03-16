@@ -1,16 +1,54 @@
-# React + Vite
+# 🦊 Pipirik's Multiplication Mania
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, high-performance web application designed to make learning multiplication tables fun and engaging for students. Built with the latest web technologies to provide a seamless, game-like experience.
 
-Currently, two official plugins are available:
+## ✨ Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Diverse Game Modes**: Includes Flashcards (Ezber), Sequential Tests (Sıralı), Selective Practice (Seçimli), and the high-intensity "Challenge" (Meydan Okuma) mode.
+* **Time-Based Challenge**: Test your speed in Challenge mode with a real-time stopwatch and penalty system for incorrect answers.
+* **Dynamic Visuals**: Powered by **Framer Motion** for smooth transitions and a custom **FlipNumber** animation for a professional feel.
+* **Local Records**: Tracks your best scores using **Zustand Persistence**, saving your top 3 challenge records directly in your browser.
+* **Interactive UI**: Includes haptic feedback (vibration), sound effects, and a custom mascot (Foxy) to guide the learning journey.
 
-## React Compiler
+## 🚀 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Technology | Purpose |
+| :--- | :--- |
+| **React 19** | Core framework using modern hook standards |
+| **Vite** | Lightning-fast build tool and dev server |
+| **Tailwind CSS v4** | Cutting-edge styling with utility classes |
+| **Zustand** | Centralized state management with persistence |
+| **Framer Motion** | Advanced UI animations and transitions |
+| **Lucide React** | Clean and consistent iconography |
+| **use-sound** | Immersive audio feedback |
 
-## Expanding the ESLint configuration
+## 🛠️ Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1.  **Clone the repository**:
+    ```bash
+    git clone [https://github.com/your-username/pipirik-s-multiplication-mania.git](https://github.com/your-username/pipirik-s-multiplication-mania.git)
+    ```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
+4.  **Build for production**:
+    ```bash
+    npm run build
+    ```
+
+## 📂 Project Structure
+
+* `src/pages/`: Contains the main application screens like `HomePage`, `MeydanGamePage`, etc.
+* `src/components/`: Reusable UI modules such as `QuestionCard`, `RecordsTable`, and `Numpad`.
+* `src/hooks/`: Custom logic including `useGameLogic` for shared game behaviors.
+* `src/store/`: Zustand store managing global game state and records.
+* `src/constants/`: Centralized configuration for game limits and asset paths.
+
+## 📝 License
+
+This project is open-source and available under the MIT License.
