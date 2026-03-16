@@ -20,8 +20,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          {/* Gelecek sayfalar buraya eklenecek, şimdilik boş component */}
-          <Route path="/ezber" element={<EzberKartlariPage />} />
+<Route path="/ezber" element={<EzberKartlariPage />} />
           <Route path="/sirali" element={<SiraliTestPage />} />
           <Route path="/sirali-oyun" element={<SiraliGamePage />} />
           <Route path="/sirali-sonuc" element={<SiraliGameResultPage />} />
