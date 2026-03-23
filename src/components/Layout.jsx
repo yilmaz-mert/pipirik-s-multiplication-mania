@@ -41,8 +41,8 @@ export default function Layout({ children }) {
   const headerConfig = getHeaderConfig(location.pathname);
 
   return (
-    <div className="fixed inset-0 w-full h-full flex justify-center bg-white bg-grid-paper overflow-hidden select-none touch-none">
-      <div className="w-full max-w-lg h-dvh relative flex flex-col overflow-x-hidden">
+    <div className="fixed inset-0 w-full h-full flex justify-center bg-white bg-grid-paper overflow-hidden select-none touch-none lg:relative lg:inset-auto lg:h-auto lg:overflow-auto">
+      <div className="w-full max-w-lg h-dvh relative flex flex-col overflow-x-hidden lg:max-w-none lg:h-auto">
 
           {/* 1. WAVE HEADER BURAYA GELDİ (headerConfig artık kullanılıyor) */}
           <div className="relative z-0"> 
