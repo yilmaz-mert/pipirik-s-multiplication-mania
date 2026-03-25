@@ -7,6 +7,7 @@ function MultiplicationTable({ selectedTable }) {
 
   return (
     <div
+      id="flashcard-tabpanel"
       role="tabpanel"
       aria-labelledby={`tab-${selectedTable}`}
       className="flex-1 flex items-center justify-center py-6"
@@ -46,7 +47,7 @@ function MultiplicationTable({ selectedTable }) {
 
 function TabButtonList({ selected, onSelect }) {
   return (
-    <div role="tablist" className="flex flex-col">
+    <div role="tablist" aria-orientation="vertical" className="flex flex-col">
       {TABLE_MENU_ITEMS.map(({ id, label }) => {
         const isActive = id === selected;
         return (
@@ -55,6 +56,7 @@ function TabButtonList({ selected, onSelect }) {
             id={`tab-${id}`}
             role="tab"
             aria-selected={isActive}
+            aria-controls="flashcard-tabpanel"
             onClick={() => onSelect(id)}
             className={`px-6 py-3 text-left font-poppins font-bold text-base border-t-2 border-r-2 transition-colors rounded-r-lg ${
               isActive
