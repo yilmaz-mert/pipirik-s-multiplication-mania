@@ -10,11 +10,11 @@ function MultiplicationTable({ selectedTable }) {
       id="flashcard-tabpanel"
       role="tabpanel"
       aria-labelledby={`tab-${selectedTable}`}
-      className="flex-1 flex items-center justify-center py-6"
+      className="flex-1 flex items-center justify-center p-6"
     >
       <div
-        className="grid gap-0 text-tema-yazi font-poppins font-bold text-[32px] tracking-wide"
-        style={{ gridTemplateColumns: '2rem 1.5rem 2rem 1.5rem 3rem' }}
+        className="grid gap-0 text-tema-yazi font-poppins font-bold text-[28px] tracking-wide w-full max-w-[380px]"
+        style={{ gridTemplateColumns: '3rem 2rem 3rem 2rem 4rem' }}
       >
         {multipliers.map((m, index) => {
           const isOrange = index % 2 === 1;
@@ -28,13 +28,13 @@ function MultiplicationTable({ selectedTable }) {
 
           return (
             <React.Fragment key={m}>
-              <div className={`${bg} ${roundedTL} ${roundedBL} text-right py-2 pl-4 pr-1`}>
+              <div className={`${bg} ${roundedTL} ${roundedBL} text-right py-3 pl-4 pr-1`}>
                 {selectedTable}
               </div>
-              <div className={`${bg} text-center py-2`}>x</div>
-              <div className={`${bg} text-right py-2 pr-1`}>{m}</div>
-              <div className={`${bg} text-center py-2`}>=</div>
-              <div className={`${bg} ${roundedTR} ${roundedBR} text-right py-2 pr-4`}>
+              <div className={`${bg} text-center py-3`}>x</div>
+              <div className={`${bg} text-right py-3 pr-1`}>{m}</div>
+              <div className={`${bg} text-center py-3`}>=</div>
+              <div className={`${bg} ${roundedTR} ${roundedBR} text-right py-3 pr-4`}>
                 {selectedTable * m}
               </div>
             </React.Fragment>
@@ -47,7 +47,7 @@ function MultiplicationTable({ selectedTable }) {
 
 function TabButtonList({ selected, onSelect }) {
   return (
-    <div role="tablist" aria-orientation="vertical" className="flex flex-col">
+    <div role="tablist" aria-orientation="vertical" className="flex flex-col w-[200px] shrink-0">
       {TABLE_MENU_ITEMS.map(({ id, label }) => {
         const isActive = id === selected;
         return (
@@ -58,11 +58,11 @@ function TabButtonList({ selected, onSelect }) {
             aria-selected={isActive}
             aria-controls="flashcard-tabpanel"
             onClick={() => onSelect(id)}
-            className={`px-6 py-3 text-left font-poppins font-bold text-base border-t-2 border-r-2 transition-colors rounded-r-lg ${
+            className={`flex-1 px-4 text-center font-poppins font-bold text-base border border-tema-kutu/20 transition-colors ${
               isActive
                 ? 'bg-tema-secili border-tema-kutu text-tema-yazi'
-                : 'bg-tema-enak border-transparent text-tema-yazi/70 hover:bg-tema-secili/40'
-            }`}
+                : 'bg-tema-enak text-tema-yazi/70 hover:bg-tema-secili/40'
+            } ${id === 2 ? 'rounded-tr-lg' : ''} ${id === 9 ? 'rounded-br-lg' : ''}`}
           >
             {label}
           </button>
@@ -74,7 +74,7 @@ function TabButtonList({ selected, onSelect }) {
 
 export default function FlashcardDesktopContent({ selected, onSelect }) {
   return (
-    <div className="flex flex-row min-h-[500px] pr-16">
+    <div className="flex flex-row min-h-[520px] pr-16">
       <MultiplicationTable selectedTable={selected} />
       <TabButtonList selected={selected} onSelect={onSelect} />
     </div>
