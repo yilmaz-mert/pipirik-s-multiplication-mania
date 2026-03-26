@@ -1,9 +1,9 @@
 // Decorative organic blob — visible only on desktop, absolutely positioned within the
-// homepage's lg:relative wrapper at left:158px / top:158px behind all card content.
-export default function YellowBlob() {
+// homepage's relative card wrapper. Accepts a className prop to override positioning.
+export default function YellowBlob({ className = '' }) {
   return (
     <div
-      className="hidden lg:block lg:absolute lg:left-[158px] lg:top-[158px] -z-10 pointer-events-none"
+      className={`hidden lg:block lg:absolute -z-10 pointer-events-none ${className}`}
       aria-hidden="true"
     >
       <svg width="1074" height="740" viewBox="0 0 1074 740" fill="none" xmlns="http://www.w3.org/2000/svg">

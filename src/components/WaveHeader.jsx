@@ -44,7 +44,7 @@ export default function WaveHeader({
           Mobile: absolutely positioned at --title-top (% from top), centred horizontally.
           Desktop: vertically centred in the 100px bar, left-padded 100px, left-aligned. */}
       <div
-        className="absolute w-full [top:var(--title-top)] lg:top-0 lg:h-full lg:justify-center lg:left-[100px] lg:w-auto z-10 flex flex-col items-center lg:items-start gap-3 transition-all duration-600 ease-in-out"
+        className="absolute w-full [top:var(--title-top)] lg:top-0 lg:h-full lg:justify-start lg:pt-5 lg:left-[100px] lg:w-auto z-10 flex flex-col items-center lg:items-start gap-3 transition-all duration-600 ease-in-out"
         style={{ '--title-top': titleTop }}
       >
         {title && (

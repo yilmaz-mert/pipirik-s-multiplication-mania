@@ -98,18 +98,17 @@ export default function HomePage() {
       </div>
 
       {/* ───────────── Desktop layout (hidden below lg) ───────────── */}
-      <div className="hidden lg:block lg:w-[1440px] lg:h-[1024px] lg:relative lg:mx-auto">
-        {/* Organic yellow blob — behind all card content */}
-        <YellowBlob />
+      <div className="hidden lg:flex lg:w-full lg:min-h-[calc(100vh-100px)] lg:items-center lg:justify-center">
 
-        {/* Outer Card — orange, absolutely positioned per Figma */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="lg:absolute lg:w-[920px] lg:h-[657px] lg:left-[264px] lg:top-[184px] lg:bg-[#F8971F] lg:rounded-[24px] lg:p-[17px_21px] lg:z-10"
-        >
-          {/* Fox mascot — overflows the card to the left */}
+        {/* Relative wrapper — card, Fox, and YellowBlob are anchored together and
+            move as one unit when the flex container centers them on any screen size. */}
+        <div className="lg:relative lg:w-[920px] lg:h-[657px]">
+
+          {/* YellowBlob — offset from wrapper top-left to match original Figma position
+              (blob was at page left:158/top:158; card was at left:264/top:184 → delta: -106/-26) */}
+          <YellowBlob className="lg:-left-[106px] lg:-top-[26px]" />
+
+          {/* Fox mascot — anchored to wrapper, overflows left */}
           <motion.img
             src={foxImage}
             alt="Fox Mascot"
@@ -118,10 +117,18 @@ export default function HomePage() {
             className="lg:absolute lg:w-[328px] lg:h-[328px] lg:-left-[192px] lg:top-[164px] lg:z-30 pointer-events-none object-contain drop-shadow-lg"
           />
 
+        {/* Outer Card — orange */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="lg:w-[920px] lg:h-[657px] lg:bg-[#F8971F] lg:rounded-[24px] lg:p-[17px_21px] lg:z-10"
+        >
+
           {/* Inner Container — cream, fills the card interior */}
           <div className="lg:w-[878px] lg:h-[623px] lg:bg-[#F5E4C3] lg:rounded-[16px] lg:flex lg:justify-center lg:items-center">
             {/* Menu list — overlapping flex row to match Figma margin: 0 -21px */}
-            <div className="lg:w-[878px] lg:h-[581px] lg:flex lg:flex-row lg:flex-wrap lg:justify-center lg:items-center">
+            <div className="lg:w-[878px] lg:h-[581px] lg:flex lg:flex-row lg:flex-wrap lg:justify-center lg:items-center lg:gap-x-4">
 
               {/* ── Button 1: EZBER KARTLARI ── */}
               <motion.button
@@ -131,7 +138,7 @@ export default function HomePage() {
                 transition={{ delay: 0.3, type: 'spring', stiffness: 175, damping: 12 }}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                className="lg:w-[374px] lg:h-[282px] relative z-10 lg:-mx-[21px] cursor-pointer border-none bg-transparent p-0"
+                className="lg:w-[374px] lg:h-[282px] relative z-10 cursor-pointer border-none bg-transparent p-0"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
@@ -153,7 +160,7 @@ export default function HomePage() {
                 transition={{ delay: 0.5, type: 'spring', stiffness: 175, damping: 12 }}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                className="lg:w-[359px] lg:h-[280px] relative z-10 lg:-mx-[21px] cursor-pointer border-none bg-transparent p-0"
+                className="lg:w-[359px] lg:h-[280px] relative z-10 cursor-pointer border-none bg-transparent p-0"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
@@ -175,7 +182,7 @@ export default function HomePage() {
                 transition={{ delay: 0.7, type: 'spring', stiffness: 175, damping: 12 }}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                className="lg:w-[360px] lg:h-[298px] relative z-10 lg:-mx-[21px] cursor-pointer border-none bg-transparent p-0"
+                className="lg:w-[360px] lg:h-[298px] relative z-10 cursor-pointer border-none bg-transparent p-0"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
@@ -214,6 +221,8 @@ export default function HomePage() {
             </div>
           </div>
         </motion.div>
+
+        </div>{/* end relative wrapper */}
       </div>
     </>
   );

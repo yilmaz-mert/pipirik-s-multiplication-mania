@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --env-filter ':*)",
+      "mcp__claude_ai_Figma__get_design_context",
+      "mcp__claude_ai_Figma__get_screenshot",
+      "mcp__claude_ai_Figma__get_metadata",
+      "Bash(npm run:*)",
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "Skill(code-review:code-review)",
+      "Skill(claude-md-management:revise-claude-md)",
+      "Bash(grep -n \"lg:relative\\\\|lg:w-\\\\[920px\\\\]\\\\|lg:h-\\\\[657px\\\\]\\\\|lg:h-\\\\[683px\\\\]\" /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/pages/*.jsx /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/components/*.jsx)"
+    ]
+  },
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true
+  }
+}
