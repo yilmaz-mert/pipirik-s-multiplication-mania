@@ -13,10 +13,15 @@
       "Skill(code-review:code-review)",
       "Skill(claude-md-management:revise-claude-md)",
       "Bash(grep -n \"lg:relative\\\\|lg:w-\\\\[920px\\\\]\\\\|lg:h-\\\\[657px\\\\]\\\\|lg:h-\\\\[683px\\\\]\" /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/pages/*.jsx /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/components/*.jsx)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npx eslint:*)",
+      "Bash(claude mcp:*)",
+      "mcp__figma__get_metadata",
+      "mcp__figma__get_design_context"
     ]
   },
   "enabledPlugins": {
-    "claude-md-management@claude-plugins-official": true
+    "claude-md-management@claude-plugins-official": true,
+    "figma@claude-plugins-official": true
   }
 }
