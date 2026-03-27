@@ -1,7 +1,7 @@
 // src/components/WaveHeader.jsx
 import React from 'react';
 import { Home, ChevronLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function WaveHeader({
   title,
@@ -47,9 +47,11 @@ export default function WaveHeader({
         className="absolute w-full [top:var(--title-top)] lg:top-0 lg:h-full lg:justify-start lg:pt-5 lg:left-[100px] lg:w-auto z-10 flex flex-col items-center lg:items-start gap-3 transition-all duration-600 ease-in-out"
         style={{ '--title-top': titleTop }}
       >
+        {/* Mobile: show the page-specific title. Desktop: always "AKIL KATI" linking to home. */}
         {title && (
           <h1 className="font-outfit font-extrabold text-[7.5vw] min-[512px]:text-[38.4px] lg:text-[36px] lg:leading-[45px] text-tema-enak lg:text-[#FEF1D9] drop-shadow-lg text-center lg:text-left leading-tight px-4 lg:px-0 whitespace-pre-wrap transition-all duration-300">
-            {title}
+            <span className="lg:hidden">{title}</span>
+            <Link to="/" className="hidden lg:inline text-inherit no-underline">AKIL KATI</Link>
           </h1>
         )}
         <div id="wave-header-portal-target" className="w-full flex justify-center lg:hidden"></div>
@@ -64,7 +66,7 @@ export default function WaveHeader({
 
       {/* Navigation icons */}
       {showIcons && (
-        <div className="absolute top-[10%] w-full px-6 flex justify-between items-center z-50">
+        <div className="absolute top-[10%] w-full px-6 flex justify-between items-center z-50 lg:hidden">
           <button onClick={() => navigate(-1)} className="text-[#1D324F] active:scale-90 transition-transform p-2 cursor-pointer">
             <ChevronLeft size={28} strokeWidth={3} />
           </button>

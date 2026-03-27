@@ -3,7 +3,7 @@
 export default function YellowBlob({ className = '' }) {
   return (
     <div
-      className={`hidden lg:block lg:absolute -z-10 pointer-events-none ${className}`}
+      className={`hidden lg:block lg:absolute -z-10 pointer-events-none will-change-transform ${className}`}
       aria-hidden="true"
     >
       <svg width="1074" height="740" viewBox="0 0 1074 740" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,5 +1,7 @@
 // src/components/FlashcardDesktopContent.jsx
 import React from 'react';
+// eslint-disable-next-line no-unused-vars -- ESLint false positive: motion is used as <motion.div> JSX prefix
+import { motion } from 'framer-motion';
 import { TABLE_MENU_ITEMS } from '../constants';
 
 // Multipliers shown in the table (Figma frame: rows 2–9)
@@ -11,9 +13,9 @@ const ROW_FIRST_HEIGHT = 72.881;
 const ROW_REST_HEIGHT = (502.889 - 72.881) / 7; // ≈ 61.43px
 
 // Pixel measurements from Figma nodes 4012:142/4012:155–165 (tabs)
-// Each tab: 230.703×75.211px; list starts at 153px (Figma 253px − 100px desktop header)
+// Each tab: 230.703×75.211px; list starts at 41px (Figma 253px − 100px header − 112px card top)
 const TAB_HEIGHT = 75.211;
-const TAB_TOP_START = 153;
+const TAB_TOP_START = 41;
 
 // CSS variable references for theme colors
 const C = {
@@ -26,15 +28,18 @@ const C = {
 
 function MultiplicationTableCard({ selected }) {
   return (
-    // Figma node 4012:170 — left=calc(25%+88px), top=202px, 314×502.889px
-    <div
+    // Figma node 4012:170 — left=168px (calc(25%+88px)≈448@1440 − 280 card left), top=90px (202−112)
+    <motion.div
       id="flashcard-tabpanel"
       role="tabpanel"
       aria-label={`${selected}'ler çarpım tablosu`}
       className="absolute overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, delay: 0.35, ease: 'easeOut' }}
       style={{
-        left: 'calc(25% + 88px)',
-        top: '202px',
+        left: '168px',
+        top: '90px',
         width: '314px',
         height: '502.889px',
         backgroundColor: C.orange,
@@ -70,7 +75,7 @@ function MultiplicationTableCard({ selected }) {
           </div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
 
@@ -82,17 +87,24 @@ function TabList({ selected, onSelect }) {
         const tabTop = TAB_TOP_START + i * TAB_HEIGHT;
 
         return (
-          <button
+          <motion.button
             key={id}
             id={`tab-${id}`}
             role="tab"
             aria-selected={isActive}
             aria-controls="flashcard-tabpanel"
             onClick={() => onSelect(id)}
+            // Staggered entry: each tab slides in from the right with a 50ms delay between items
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 + i * 0.05, ease: 'easeOut' }}
+            // Hover: card lifts forward (scale) with deepening shadow; tap gives tactile feedback
+            whileHover={{ scale: 1.02, boxShadow: '0 4px 16px rgba(0,0,0,0.14)' }}
+            whileTap={{ scale: 0.97 }}
             style={{
               position: 'absolute',
-              // Figma node 4012:142 — left=calc(58.33%−7.34px)
-              left: 'calc(58.33% - 7.34px)',
+              // Figma node 4012:142 — left=552.66px (calc(58.33%−7.34px)≈832.6@1440 − 280 card left)
+              left: '552.66px',
               top: `${tabTop}px`,
               width: '230.703px',
               height: `${TAB_HEIGHT}px`,
@@ -112,11 +124,12 @@ function TabList({ selected, onSelect }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              // Background color transition handled via CSS; transforms handled by Framer Motion
               transition: 'background-color 0.15s ease',
             }}
           >
             {label}
-          </button>
+          </motion.button>
         );
       })}
     </>
@@ -130,13 +143,16 @@ export default function FlashcardDesktopContent({ selected, onSelect }) {
     <div className="absolute inset-0">
 
       {/* Selected area background — Figma node 4012:154 */}
-      {/* left=calc(16.67%+137px), top=153px, 456×602px; always visible behind the active table */}
-      <div
+      {/* left=97px (calc(16.67%+137px)≈377@1440 − 280 card left), top=41px (153−112) */}
+      <motion.div
         className="absolute"
         aria-hidden="true"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.25, ease: 'easeOut' }}
         style={{
-          left: 'calc(16.67% + 137px)',
-          top: '153px',
+          left: '97px',
+          top: '41px',
           width: '456px',
           height: '602px',
           backgroundColor: C.secili,

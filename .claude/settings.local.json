@@ -12,7 +12,8 @@
       "mcp__plugin_playwright_playwright__browser_take_screenshot",
       "Skill(code-review:code-review)",
       "Skill(claude-md-management:revise-claude-md)",
-      "Bash(grep -n \"lg:relative\\\\|lg:w-\\\\[920px\\\\]\\\\|lg:h-\\\\[657px\\\\]\\\\|lg:h-\\\\[683px\\\\]\" /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/pages/*.jsx /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/components/*.jsx)"
+      "Bash(grep -n \"lg:relative\\\\|lg:w-\\\\[920px\\\\]\\\\|lg:h-\\\\[657px\\\\]\\\\|lg:h-\\\\[683px\\\\]\" /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/pages/*.jsx /c/Users/Mert/Desktop/pipirik-s-multiplication-mania/src/components/*.jsx)",
+      "Bash(node:*)"
     ]
   },
   "enabledPlugins": {

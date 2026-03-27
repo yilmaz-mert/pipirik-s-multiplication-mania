@@ -8,6 +8,7 @@ import SelectionMenu from '../components/SelectionMenu';
 import { TABLE_MENU_ITEMS } from '../constants';
 import FlashcardDesktopContent from '../components/FlashcardDesktopContent';
 import foxImage from '../assets/foxy.png';
+import YellowBlob from '../components/YellowBlob';
 
 const tableVariants = {
   hidden: { opacity: 0 },
@@ -73,114 +74,96 @@ export default function EzberKartlariPage() {
         </div>
       </div>
 
-      {/* Desktop layout — full screen, pixel-perfect per Figma node 4012:130 */}
-      {/* Reference frame: 1440×1024px. Desktop header (WaveHeader) is 100px. */}
-      {/* All top values = Figma top − 100px. Horizontal positions use Figma calc() values. */}
-      <div
-        className="hidden lg:block w-full relative"
-        style={{ minHeight: '924px' }} // Figma: 1024px − 100px header = 924px
-      >
-        {/* Decorative background blob — Figma node 4012:131 (BgBlob) */}
-        {/* Figma: left=158, top=158 → top=58 (−100), w=1074, h=740 */}
-        <div
-          className="absolute pointer-events-none"
-          aria-hidden="true"
-          style={{ left: '158px', top: '58px', width: '1074px', height: '740px' }}
-        >
-          <svg
-            className="w-full h-full"
-            viewBox="0 0 1074 740"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+      {/* Desktop layout — flex-centered, responsive. All decoratives anchored to the relative wrapper. */}
+      <div className="hidden lg:flex lg:w-full lg:min-h-[calc(100vh-100px)] lg:items-center lg:justify-center">
+
+        {/* Relative wrapper — sized to the card (879×683). Fox, blob, and sidebar are positioned
+            relative to this wrapper so they move together as one unit on any screen size.
+            Offsets computed as: (Figma page coord − 100px header) − (card's page coord).
+            Card page coords: left≈280px@1440, top=112px. */}
+        <div className="lg:relative lg:w-[879px] lg:h-[683px]">
+
+          {/* Decorative background blob — uses YellowBlob component, identical offset to HomePage.
+              Both pages share Figma blob origin (158, 158). Offset matches HomePage's lg:-left-[106px]
+              lg:-top-[26px] so the blob appears in the same visual relationship to the card on both pages. */}
+          <YellowBlob className="lg:-left-[106px] lg:-top-[26px]" />
+
+          {/* Mascot fox — Figma node 4012:133 */}
+          {/* Outer motion.div handles entry (slide from left); inner motion.img handles continuous float */}
+          {/* Offset from wrapper: left=72−280=−208, top=248−112=136 */}
+          <motion.div
+            className="absolute pointer-events-none z-10"
+            style={{ left: '-208px', top: '136px', width: '328px', height: '328px' }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3, ease: 'easeOut' }}
           >
-            {/* Approximated organic blob shape matching Figma BgBlob */}
-            <path
-              d="M900 80 C1020 30, 1074 190, 1050 370 C1026 550, 880 710, 680 728
-                 C480 746, 180 690, 70 500 C-40 310, 30 90, 210 42
-                 C390 -6, 780 130, 900 80Z"
-              fill="#FAECA2"
-              opacity="0.55"
+            <motion.img
+              src={foxImage}
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-contain will-change-transform"
+              animate={{ y: [0, -12, 0], rotate: [0, 2, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
             />
-          </svg>
-        </div>
+          </motion.div>
 
-        {/* Mascot fox — Figma node 4012:133 */}
-        {/* Figma: left=72, top=348 → top=248 (−100), w=328, h=328 */}
-        <img
-          src={foxImage}
-          alt=""
-          aria-hidden="true"
-          className="absolute pointer-events-none object-contain z-10"
-          style={{ left: '72px', top: '248px', width: '328px', height: '328px' }}
-        />
-
-        {/* InnerCard shell — Figma node 4012:132 */}
-        {/* Figma: left=calc(8.33%+160px)→280px@1440, top=212 → top=112 (−100), w=879, h=683 */}
-        {/* 24px border (tema-kutu #F8971F), 16px radius, cream bg (tema-enak #F5E4C3) */}
-        <div
-          className="absolute"
-          aria-hidden="true"
-          style={{
-            left: 'calc(8.33% + 160px)', // Figma: calc(8.33%+160px) → 280px@1440
-            top: '112px',                 // Figma: 212px − 100px header = 112px
-            width: '879px',
-            height: '683px',
-            border: '24px solid #F8971F', // Figma: border-24 tema-kutu
-            borderRadius: '16px',
-            backgroundColor: '#F5E4C3',   // Figma: bg-tema-enak
-          }}
-        />
-
-        {/* Sidebar blur panel — Figma node 4012:138 (SidebarBlur) */}
-        {/* Figma: left=calc(83.33%−20px)→1180px@1440, top=279 → top=179 (−100), w=100, h=548 */}
-        <div
-          className="absolute backdrop-blur-[2px] z-10"
-          aria-hidden="true"
-          style={{
-            left: 'calc(83.33% - 20px)', // Figma: calc(83.33%−20px) → 1180px@1440
-            top: '179px',                 // Figma: 279px − 100px header = 179px
-            width: '100px',
-            height: '548px',              // Figma: h-[548px]
-            backgroundColor: 'rgba(250,236,162,0.25)', // Figma: bg-[rgba(250,236,162,0.25)]
-            borderRadius: '0 16px 16px 0', // Figma: rounded-br-[16px] rounded-tr-[16px]
-          }}
-        />
-
-        {/* Sidebar title "EZBER KARTLARI" — Figma node 4012:139 */}
-        {/* Figma: centered at calc(83.33%+58.5px)→1259px@1440, top=244 → top=144 (−100) */}
-        {/* Container: w=141, h=611, translateX(-50%) centers it at the left point */}
-        <div
-          className="absolute flex items-center justify-center z-10"
-          aria-hidden="true"
-          style={{
-            left: 'calc(83.33% + 58.5px)', // Figma center x: calc(83.33%+58.5px) → 1259px@1440
-            top: '144px',                    // Figma: 244px − 100px header = 144px
-            width: '141px',
-            height: '611px',
-            transform: 'translateX(-50%)',   // Figma: -translate-x-1/2
-          }}
-        >
-          <span
+          {/* InnerCard shell — Figma node 4012:132 */}
+          {/* The wrapper IS the card: left=0, top=0, 879×683 with 24px orange border */}
+          <motion.div
+            className="absolute inset-0"
+            aria-hidden="true"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
             style={{
-              display: 'block',
-              transform: 'rotate(-90deg)',
-              whiteSpace: 'nowrap',
-              fontFamily: 'Outfit, sans-serif',
-              fontWeight: '800',               // Figma: font-extrabold Outfit ExtraBold
-              fontSize: '48px',                // Figma: text-[48px]
-              color: 'rgba(248,151,31,0.6)',    // Figma: text-[rgba(248,151,31,0.6)]
-              letterSpacing: '6.72px',         // Figma: tracking-[6.72px]
+              border: '24px solid #F8971F',
+              borderRadius: '16px',
+              backgroundColor: '#F5E4C3',
+            }}
+          />
+
+          {/* Sidebar — flush with card right edge (left=879px), text centered within panel */}
+          {/* SidebarBlur (node 4012:138) + SidebarTitle (node 4012:139) merged into one element */}
+          {/* top=67px (179−112), height=548px — nearly vertically symmetric within the 683px wrapper */}
+          <motion.div
+            className="absolute backdrop-blur-[2px] z-10 flex items-center justify-center"
+            aria-hidden="true"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5, ease: 'easeOut' }}
+            style={{
+              left: '879px',
+              top: '67px',
+              width: '100px',
+              height: '548px',
+              backgroundColor: 'rgba(250,236,162,0.25)',
+              borderRadius: '0 16px 16px 0',
             }}
           >
-            EZBER KARTLARI
-          </span>
-        </div>
+            <span
+              style={{
+                display: 'block',
+                transform: 'rotate(-90deg)',
+                whiteSpace: 'nowrap',
+                fontFamily: 'Outfit, sans-serif',
+                fontWeight: '800',
+                fontSize: '48px',
+                color: 'rgba(248,151,31,0.6)',
+                letterSpacing: '6.72px',
+              }}
+            >
+              EZBER KARTLARI
+            </span>
+          </motion.div>
 
-        {/* Interactive flashcard content: selected area bg + multiplication table + tab buttons */}
-        <FlashcardDesktopContent
-          selected={selectedNumber ? parseInt(selectedNumber) : 2}
-          onSelect={(n) => setSearchParams({ sayi: n })}
-        />
+          {/* Interactive flashcard content — fills the wrapper (879×683) */}
+          <FlashcardDesktopContent
+            selected={selectedNumber ? parseInt(selectedNumber) : 2}
+            onSelect={(n) => setSearchParams({ sayi: n })}
+          />
+
+        </div>{/* end relative wrapper */}
       </div>
     </>
   );

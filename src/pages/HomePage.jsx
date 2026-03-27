@@ -114,7 +114,7 @@ export default function HomePage() {
             alt="Fox Mascot"
             animate={{ y: [0, -12, 0], rotate: [0, 2, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="lg:absolute lg:w-[328px] lg:h-[328px] lg:-left-[192px] lg:top-[164px] lg:z-30 pointer-events-none object-contain drop-shadow-lg"
+            className="lg:absolute lg:w-[328px] lg:h-[328px] lg:-left-[192px] lg:top-[164px] lg:z-30 pointer-events-none object-contain drop-shadow-lg will-change-transform"
           />
 
         {/* Outer Card — orange */}
@@ -136,9 +136,9 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, type: 'spring', stiffness: 175, damping: 12 }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="lg:w-[374px] lg:h-[282px] relative z-10 cursor-pointer border-none bg-transparent p-0"
+                whileHover={{ scale: 1.04, transition: { type: 'tween', ease: 'easeOut', duration: 0.15 } }}
+                whileTap={{ scale: 0.96, transition: { type: 'tween', ease: 'easeOut', duration: 0.1 } }}
+                className="lg:w-[374px] lg:h-[282px] relative z-10 cursor-pointer border-none bg-transparent p-0 will-change-transform"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
@@ -158,9 +158,9 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 175, damping: 12 }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="lg:w-[359px] lg:h-[280px] relative z-10 cursor-pointer border-none bg-transparent p-0"
+                whileHover={{ scale: 1.04, transition: { type: 'tween', ease: 'easeOut', duration: 0.15 } }}
+                whileTap={{ scale: 0.96, transition: { type: 'tween', ease: 'easeOut', duration: 0.1 } }}
+                className="lg:w-[359px] lg:h-[280px] relative z-10 cursor-pointer border-none bg-transparent p-0 will-change-transform"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
@@ -180,9 +180,9 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7, type: 'spring', stiffness: 175, damping: 12 }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="lg:w-[360px] lg:h-[298px] relative z-10 cursor-pointer border-none bg-transparent p-0"
+                whileHover={{ scale: 1.04, transition: { type: 'tween', ease: 'easeOut', duration: 0.15 } }}
+                whileTap={{ scale: 0.96, transition: { type: 'tween', ease: 'easeOut', duration: 0.1 } }}
+                className="lg:w-[360px] lg:h-[298px] relative z-10 cursor-pointer border-none bg-transparent p-0 will-change-transform"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
@@ -202,9 +202,9 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.9, type: 'spring', stiffness: 175, damping: 12 }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="lg:w-[370px] lg:h-[299px] relative z-10 cursor-pointer border-none bg-transparent p-0"
+                whileHover={{ scale: 1.04, transition: { type: 'tween', ease: 'easeOut', duration: 0.15 } }}
+                whileTap={{ scale: 0.96, transition: { type: 'tween', ease: 'easeOut', duration: 0.1 } }}
+                className="lg:w-[370px] lg:h-[299px] relative z-10 cursor-pointer border-none bg-transparent p-0 will-change-transform"
               >
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
