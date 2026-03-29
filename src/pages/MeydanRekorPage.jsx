@@ -93,9 +93,7 @@ export default function MeydanResultPage() {
                   {record ? (
                     <>
                       {/* 1. SÜTUN: SÜRE */}
-                      <div className="flex flex-col justify-center items-center h-full">
-                        {/* DÜZELTME: h-[min(3vw,12px)] olan yer SIRA yazısıyla aynı boyuta (18px) çekildi */}
-                        <div className="h-[min(4.5vw,18px)] mb-3" /> 
+                      <div className="relative flex items-center justify-center h-full">
                         {isCurrentResult ? (
                           <div className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: bubbleBg }}>
                             <span className="font-poppins font-medium text-[min(4vw,18px)] text-tema-yazi uppercase">{record.time}</span>
@@ -105,9 +103,9 @@ export default function MeydanResultPage() {
                         )}
                       </div>
 
-                      {/* 2. SÜTUN: DOĞRU (SIRA YAZISI BURADA) */}
-                      <div className="flex flex-col justify-center items-center h-full">
-                        <span className="font-poppins font-bold text-[min(5vw,20px)] text-tema-yazi uppercase mb-3 leading-none">
+                      {/* 2. SÜTUN: DOĞRU — SIRA label floats at top, value stays centered */}
+                      <div className="relative flex items-center justify-center h-full">
+                        <span className="absolute top-[6px] inset-x-0 text-center font-poppins font-bold text-[min(3.5vw,14px)] text-tema-yazi uppercase leading-none">
                           {idx + 1}.SIRA
                         </span>
                         {isCurrentResult ? (
@@ -120,9 +118,7 @@ export default function MeydanResultPage() {
                       </div>
 
                       {/* 3. SÜTUN: YANLIŞ */}
-                      <div className="flex flex-col justify-center items-center h-full">
-                        {/* DÜZELTME: h-[min(3vw,12px)] olan yer SIRA yazısıyla aynı boyuta (18px) çekildi */}
-                        <div className="h-[min(4.5vw,18px)] mb-3" />
+                      <div className="relative flex items-center justify-center h-full">
                         {isCurrentResult ? (
                           <div className="w-[min(19.5vw,73px)] aspect-73/36 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: bubbleBg }}>
                             <span className={rowTextStyle}>{record.wrong}</span>
@@ -142,15 +138,14 @@ export default function MeydanResultPage() {
                 </div>
               );
             })}
-            {/* LİSTEYE GİREMEDİĞİNDE GÖZÜKEN ÖZEL SATIR */}
+            {/* Extra row shown when current result didn't make the top-3 */}
             {showExtraRow && (
-              <div 
-                className="grid grid-cols-3 w-full items-center py-[1.0vh]" // İstediğin padding (py) burada eklendi
+              <div
+                className="grid grid-cols-3 w-full items-center py-[1.0vh]"
                 style={{ backgroundColor: '#F9C261' }}
               >
-                {/* SÜRE KUTUSU */}
-                <div className="flex flex-col justify-center items-center h-full">
-                  <div className="h-[min(3vw,12px)] mb-5" /> {/* Hizalama Spacers */}
+                {/* SÜRE */}
+                <div className="relative flex items-center justify-center h-full">
                   <div className="w-[min(19.5vw,73px)] aspect-73/36 bg-tema-enak rounded-2xl flex items-center justify-center">
                     <span className="font-poppins font-medium text-[min(4vw,18px)] text-tema-yazi uppercase">
                       {currentTimeStr}
@@ -158,10 +153,9 @@ export default function MeydanResultPage() {
                   </div>
                 </div>
 
-                {/* DOĞRU KUTUSU */}
-                <div className="flex flex-col justify-center items-center h-full">
-                  {/* rankIndex + 1 ile gerçek sıralamanı (örn: 5.SIRA) yazdırıyoruz */}
-                  <span className="font-poppins font-bold text-[min(5vw,20px)] text-tema-yazi uppercase mb-3 leading-none">
+                {/* DOĞRU — SIRA label floats at top, value stays centered */}
+                <div className="relative flex items-center justify-center h-full">
+                  <span className="absolute top-[6px] inset-x-0 text-center font-poppins font-bold text-[min(3.5vw,14px)] text-tema-yazi uppercase leading-none">
                     {rankIndex + 1}.SIRA
                   </span>
                   <div className="w-[min(19.5vw,73px)] aspect-73/36 bg-tema-enak rounded-2xl flex items-center justify-center">
@@ -171,9 +165,8 @@ export default function MeydanResultPage() {
                   </div>
                 </div>
 
-                {/* YANLIŞ KUTUSU */}
-                <div className="flex flex-col justify-center items-center h-full">
-                  <div className="h-[min(3vw,12px)] mb-5" />
+                {/* YANLIŞ */}
+                <div className="relative flex items-center justify-center h-full">
                   <div className="w-[min(19.5vw,73px)] aspect-73/36 bg-tema-enak rounded-2xl flex items-center justify-center">
                     <span className="font-poppins font-extrabold text-[min(4.5vw,20px)] text-tema-yazi uppercase">
                       {wrong}

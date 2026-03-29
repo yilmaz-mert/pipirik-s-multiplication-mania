@@ -17,7 +17,7 @@ export default function RecordsTable({ records = [] }) {
   const displayRecords = records.slice(0, 3);
 
   return (
-    <div className="w-full bg-tema-kutu rounded-[9px] flex flex-col items-center pt-[2.4%] px-[2.4%] pb-[3%] shadow-sm aspect-335/224">
+    <div className="w-full bg-tema-kutu rounded-[9px] flex flex-col items-center pt-[2.4%] px-[10px] pb-[3%] shadow-sm aspect-335/224">
       <table className="w-full h-full flex flex-col">
         <thead className="flex w-full items-center gap-[5.01%] h-[17.13%]">
           <tr className="flex w-full h-full gap-[5.01%]">
